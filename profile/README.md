@@ -1,4 +1,4 @@
-![Hedia Logo](https://www.hedia.com/wp-content/uploads/2023/05/logo-hedia.svg)
+![Hedia Logo](/assets/hedia-logo.svg)
 
 ## Innovative solutions for improved diabetes management
 
