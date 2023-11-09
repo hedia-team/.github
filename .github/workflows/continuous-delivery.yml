@@ -1,0 +1,37 @@
+name: Release, Publish, Deploy
+
+on:
+  workflow_call:
+    inputs:
+      semver:
+        description: Semver version format expected. If set, a release will be created on Github.
+        required: false
+        type: string
+      type:
+        description: If set to "module", the code will be published to npm. If set to "service", the code will be deployed to Scalingo.
+        required: true
+        type: string
+
+    secrets:
+      NPM_TOKEN:
+        description: Needed to publish a package to npm
+        required: true
+      SCALINGO_TOKEN:
+        description: Needed to deploy to Scalingo
+        required: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Release on Github
+        run: echo ${{ inputs.semver }}
+
+      - name: Publish on NPM
+        if: inputs.type == 'module'
+        run: echo ${{ inputs.type }}
+
+      - name: Deploy on Scalingo
+        if: inputs.type == 'service'
+        run: echo ${{ inputs.type }}
