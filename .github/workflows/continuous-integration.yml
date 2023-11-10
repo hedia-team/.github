@@ -58,6 +58,9 @@ jobs:
       - name: "Build Repository"
         run: "npm run build --if-present"
 
+      - name: "Setup Service"
+        run: "npm run setup --if-present"
+
       - name: "Run Tests"
         run: "npm run test"
 
