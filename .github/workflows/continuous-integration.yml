@@ -59,7 +59,7 @@ jobs:
         run: "npm run build --if-present"
 
       - name: "Setup Service"
-        run: "npm run setup --if-present"
+        run: "NODE_ENV=test npm run setup --if-present"
 
       - name: "Run Tests"
         run: "npm run test"
