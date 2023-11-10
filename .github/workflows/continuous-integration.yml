@@ -15,6 +15,12 @@ on:
       SONAR_TOKEN:
         description: Needed to run SonarCloud Scan
         required: true
+      BREVO_API_KEY:
+        required: false
+      PRIVATE_KEY:
+        required: false
+      PUBLIC_KEY:
+        required: false
 
 jobs:
   build-test:
@@ -63,6 +69,10 @@ jobs:
 
       - name: "Run Tests"
         run: "npm run test"
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
 
       - name: SonarCloud Init
         env:
