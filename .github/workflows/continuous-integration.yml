@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       database:
-        description: Database used in this workflow. Default to none.
+        description: Database used in this workflow. Default to none
         required: false
         type: string
 
@@ -16,10 +16,13 @@ on:
         description: Needed to run SonarCloud Scan
         required: true
       BREVO_API_KEY:
+        description: Token needed to authenticate requests to Brevo API if any
         required: false
       PRIVATE_KEY:
+        description: Private JSON Web Key that might be needed to run test script
         required: false
       PUBLIC_KEY:
+        description: Public JSON Web Key that might be needed to run test script
         required: false
 
 jobs:
