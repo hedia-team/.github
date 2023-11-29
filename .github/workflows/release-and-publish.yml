@@ -9,7 +9,7 @@ permissions:
 
 jobs:
     release:
-        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
+        uses: hedia-team/.github/.github/workflows/release-please.yml@try-shared-workflows-with-jobs
 
     publish:
         needs: release
