@@ -8,15 +8,13 @@ permissions:
     pull-requests: write
 
 jobs:
-    release-and-publish:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Release Please
-              uses: hedia-team/.github/.github/workflows/release-please.yml@latest
-              id: release
+    release:
+        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
 
-            - name: Publish Please
-              if: steps.release.outputs.release_created == 'true'
-              uses: hedia-team/.github/.github/workflows/publish-please.yml@latest
-              with:
-                  github_ref: ${{ github.ref }}
+    publish:
+        needs: release
+        if: needs.release.outputs.release_created == 'true'
+        uses: hedia-team/.github/.github/workflows/publish-please.yml@latest
+        secrets: inherit
+        with:
+            github_ref: ${{ github.ref }}
