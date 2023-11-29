@@ -2,6 +2,10 @@ name: Release Please
 
 on:
     workflow_call:
+        outputs:
+            release_created:
+                description: "Whether or not a release was created"
+                value: ${{ jobs.release-please.outputs.release_created }}
 
 permissions:
     contents: write
@@ -18,5 +22,8 @@ jobs:
             )
         steps:
             - uses: google-github-actions/release-please-action@v3
+              id: release-please
               with:
                   release-type: node
+        outputs:
+            release_created: ${{ steps.release-please.outputs.release_created }}
