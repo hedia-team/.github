@@ -7,6 +7,11 @@ on:
                 description: Database used in this workflow. Default to none
                 required: false
                 type: string
+            redis:
+                description: Whether or not to use Redis in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
 
         secrets:
             READONLY_NPM_TOKEN:
@@ -44,6 +49,16 @@ jobs:
                     --health-retries 5
                 ports:
                     - 5432:5432
+
+            redis:
+                image: ${{ inputs.redis && 'redis' || '' }}
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 6379:6379
 
         steps:
             - name: Checkout Repository
