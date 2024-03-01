@@ -6,6 +6,10 @@ on:
             release_created:
                 description: "Whether or not a release was created"
                 value: ${{ jobs.release-please.outputs.release_created }}
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to run release-please
+                required: true
 
 permissions:
     contents: write
