@@ -6,6 +6,9 @@ on:
             release_created:
                 description: "Whether or not a release was created"
                 value: ${{ jobs.release-please.outputs.release_created }}
+            tag_name:
+                description: "The tag name (version number) of the release created"
+                value: ${{ jobs.release-please.outputs.tag_name }}
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to run release-please
