@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     release:
-        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
+        uses: hedia-team/.github/.github/workflows/release-please.yml@release-and-push-docker-image
         secrets: inherit
 
     build-and-push:
@@ -44,5 +44,5 @@ jobs:
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: |
-                      ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
+                      ghcr.io/${{ github.repository }}:${{ needs.release.outputs.tag_name }}
                       ghcr.io/${{ github.repository }}:latest
