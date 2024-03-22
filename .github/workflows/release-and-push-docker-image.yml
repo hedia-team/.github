@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     release:
-        uses: hedia-team/.github/.github/workflows/release-please.yml@release-and-push-docker-image
+        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
         secrets: inherit
 
     build-and-push:
