@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     release:
-        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
+        uses: hedia-team/.github/.github/workflows/release-please.yml@use-target-branch
         secrets: inherit
 
     build-and-push:
