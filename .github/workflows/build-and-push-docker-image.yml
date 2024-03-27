@@ -1,7 +1,20 @@
-name: Release and Push Docker Image
+name: Build and Push Docker Image
 
 on:
     workflow_call:
+        inputs:
+            tag_name:
+                type: string
+                description: Tag name
+                required: false
+                default: latest
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to install private @hedia npm packages
+                required: true
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to push to GitHub Container Registry
+                required: true
 
 permissions:
     contents: write
@@ -9,14 +22,8 @@ permissions:
     packages: write
 
 jobs:
-    release:
-        uses: hedia-team/.github/.github/workflows/release-please.yml@latest
-        secrets: inherit
-
-    build-and-push:
-        needs: release
+    build-and-push-docker-image:
         runs-on: ubuntu-latest
-        if: needs.release.outputs.release_created == 'true'
         steps:
             - name: Check out code
               uses: actions/checkout@v4
@@ -44,5 +51,5 @@ jobs:
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: |
-                      ghcr.io/${{ github.repository }}:${{ needs.release.outputs.tag_name }}
+                      ghcr.io/${{ github.repository }}:${{ inputs.tag_name }}
                       ghcr.io/${{ github.repository }}:latest
