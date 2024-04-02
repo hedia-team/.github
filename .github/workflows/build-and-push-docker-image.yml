@@ -3,9 +3,13 @@ name: Build and Push Docker Image
 on:
     workflow_call:
         inputs:
+            github_ref:
+                description: The git ref to check out; will use the tag_name if not provided
+                type: string
+                required: false
             tag_name:
                 type: string
-                description: Tag name
+                description: The tag to use for the Docker image
                 required: false
                 default: latest
         secrets:
@@ -27,6 +31,9 @@ jobs:
         steps:
             - name: Check out code
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.github_ref || inputs.tag_name }}
+                  fetch-depth: 1
 
             - name: Create .npmrc
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.READONLY_NPM_TOKEN }}" > .npmrc
