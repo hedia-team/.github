@@ -29,6 +29,9 @@ on:
             PUBLIC_KEY:
                 description: Public JSON Web Key that might be needed to run test script
                 required: false
+            SLACK_APP_TOKEN:
+                description: Token to authenticate requests to Slack API if necessary
+                required: false
 
 jobs:
     build-test:
@@ -91,6 +94,7 @@ jobs:
                   BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
                   PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
                   PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+                  SLACK_APP_TOKEN: ${{ secrets.SLACK_APP_TOKEN }}
 
             - name: SonarCloud Init
               env:
