@@ -1,0 +1,105 @@
+name: Test
+
+on:
+    workflow_call:
+        inputs:
+            postgres:
+                description: Database used in this workflow. Default to none
+                required: false
+                type: string
+            redis:
+                description: Whether or not to use Redis in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
+
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to install private @hedia npm packages
+                required: true
+            SONAR_TOKEN:
+                description: Needed to run SonarCloud Scan
+                required: true
+            BREVO_API_KEY:
+                description: Token needed to authenticate requests to Brevo API if any
+                required: false
+            PRIVATE_KEY:
+                description: Private JSON Web Key that might be needed to run test script
+                required: false
+            PUBLIC_KEY:
+                description: Public JSON Web Key that might be needed to run test script
+                required: false
+            SLACK_APP_TOKEN:
+                description: Token to authenticate requests to Slack API if necessary
+                required: false
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+
+        services:
+            postgres:
+                image: ${{ inputs.postgres && 'postgres' || '' }}
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: password
+                    POSTGRES_DB: ${{ inputs.postgres }}
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+
+            redis:
+                image: ${{ inputs.redis && 'redis' || '' }}
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 6379:6379
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: 'npm'
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install Dependencies
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: Download Build
+              uses: actions/download-artifact@v4
+              with:
+                name: build
+                path: dist
+
+            - name: Setup Service
+              run: NODE_ENV=test npm run setup --if-present
+
+            - name: Run Tests
+              run: npm run test
+              env:
+                  BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+                  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+                  PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+                  SLACK_APP_TOKEN: ${{ secrets.SLACK_APP_TOKEN }}
+
+            - name: Upload Coverage
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage.xml
+                path: coverage.xml
