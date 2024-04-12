@@ -84,8 +84,8 @@ jobs:
             - name: Download Build
               uses: actions/download-artifact@v4
               with:
-                name: build
-                path: dist
+                path: .
+                pattern: dist
 
             - name: Setup Service
               run: NODE_ENV=test npm run setup --if-present
@@ -101,5 +101,5 @@ jobs:
             - name: Upload Coverage
               uses: actions/upload-artifact@v4
               with:
-                name: coverage.xml
+                name: coverage
                 path: coverage.xml
