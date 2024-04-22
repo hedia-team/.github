@@ -91,7 +91,7 @@ jobs:
         env:
           ENV_FILE: ${{secrets.ENV_FILE}}
         if: env.ENV_FILE != null
-        run: echo $ENV_FILE > .env
+        run: echo "$ENV_FILE" > .env
 
       - name: Setup Service
         run: NODE_ENV=test npm run setup --if-present
