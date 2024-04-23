@@ -23,7 +23,7 @@ jobs:
                   cache: 'npm'
                   node-version-file: package.json
                   registry-url: https://registry.npmjs.org
-                  scope: "@hedia"
+                  scope: '@hedia'
 
             - name: Install Dependencies
               run: npm ci
