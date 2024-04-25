@@ -1,4 +1,4 @@
-name: Update Dependencies
+name: Update Please
 
 on:
     workflow_call:
@@ -20,7 +20,7 @@ permissions:
     pull-requests: write
 
 jobs:
-    update-dependencies:
+    update-please:
         runs-on: ubuntu-latest
 
         steps:
@@ -57,7 +57,7 @@ jobs:
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   commit-message: "chore(deps): update dependencies"
                   title: "chore(deps): update dependencies"
-                  body: "Update dependencies using `ncu`"
-                  branch: update-dependencies-${{ github.sha }}
+                  body: "Update Please has found some dependencies to be updated! 🚀"
+                  branch: update-please-${{ github.sha }}
                   labels: chore
                   reviewers: ${{ inputs.reviewers }}
