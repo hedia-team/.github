@@ -56,7 +56,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Create Pull Request
-              uses: peter-evans/create-pull-request@v6
+              uses: hedia-team/create-pull-request@v6
               with:
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   commit-message: "chore(deps): update dependencies"
