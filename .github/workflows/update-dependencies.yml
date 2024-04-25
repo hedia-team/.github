@@ -43,6 +43,8 @@ jobs:
 
             - name: Install updated dependencies
               run: npm install
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Create Pull Request
               uses: peter-evans/create-pull-request@v6
