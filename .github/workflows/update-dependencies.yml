@@ -2,6 +2,11 @@ name: Update Dependencies
 
 on:
     workflow_call:
+        inputs:
+            reviewers:
+              type: string
+              description: Reviewers for the PR. Comma separated list of GitHub usernames.
+              default: hedia-team/development
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to create the PR
@@ -55,3 +60,4 @@ jobs:
                   body: "Update dependencies using `ncu`"
                   branch: update-dependencies-${{ github.sha }}
                   labels: chore
+                  reviewers: ${{ inputs.reviewers }}
