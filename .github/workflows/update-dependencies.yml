@@ -1,0 +1,49 @@
+name: Update Dependencies
+
+on:
+  workflow_call:
+      secrets:
+          HEDIA_BOT_GITHUB_PAT:
+              description: Needed to run release-please
+              required: true
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    update-dependencies:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: "npm"
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install npm-check-updates
+              run: npm install -g npm-check-updates
+
+            - name: Update minor and patch dependencies
+              run: ncu -t minor -u
+
+            - name: Install updated dependencies
+              run: npm install
+
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v6
+              with:
+                  token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  commit-message: "chore(deps): update dependencies"
+                  title: "chore(deps): update dependencies"
+                  body: Update dependencies using npm-check-updates
+                  branch: update-dependencies
