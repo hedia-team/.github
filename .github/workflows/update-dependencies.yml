@@ -1,11 +1,14 @@
 name: Update Dependencies
 
 on:
-  workflow_call:
-      secrets:
-          HEDIA_BOT_GITHUB_PAT:
-              description: Needed to run release-please
-              required: true
+    workflow_call:
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to create the PR
+                required: true
+            READONLY_NPM_TOKEN:
+                description: Needed to access private @hedia npm packages
+                required: true
 
 permissions:
     contents: write
@@ -35,6 +38,8 @@ jobs:
 
             - name: Update minor and patch dependencies
               run: ncu -t minor -u
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Install updated dependencies
               run: npm install
