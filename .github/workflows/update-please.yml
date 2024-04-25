@@ -4,9 +4,13 @@ on:
     workflow_call:
         inputs:
             reviewers:
-              type: string
-              description: Reviewers for the PR. Comma separated list of GitHub usernames.
-              default: hedia-team/development
+                type: string
+                description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
+                required: false
+            team-reviewers:
+                type: string
+                description: A comma-separated list of GitHub teams to request a review from.
+                required: false
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to create the PR
@@ -61,3 +65,4 @@ jobs:
                   branch: update-please-${{ github.sha }}
                   labels: chore
                   reviewers: ${{ inputs.reviewers }}
+                  team-reviewers: ${{ inputs.team-reviewers }}
