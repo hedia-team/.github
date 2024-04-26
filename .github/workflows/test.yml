@@ -88,12 +88,11 @@ jobs:
                   pattern: dist
 
             - name: Load 1Password Environment
+              if: ${{ endsWith(github.event.repository.name, '-service') }}
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
                   ENV_FILE: op://Github/${{ github.event.repository.name }}/ENV_FILE
-              with:
-                  export-env: true
 
             - name: Setup Service
               run: echo "$ENV_FILE" > .env && npm run setup --if-present
