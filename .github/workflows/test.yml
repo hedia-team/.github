@@ -14,24 +14,12 @@ on:
                 type: boolean
 
         secrets:
+            OP_SERVICE_ACCOUNT_TOKEN:
+                description: Required to load environment variables stored in 1Password
+                required: true
             READONLY_NPM_TOKEN:
-                description: Needed to install private @hedia npm packages
+                description: Required to install private @hedia npm packages
                 required: true
-            SONAR_TOKEN:
-                description: Needed to run SonarCloud Scan
-                required: true
-            BREVO_API_KEY:
-                description: Token needed to authenticate requests to Brevo API if any
-                required: false
-            PRIVATE_KEY:
-                description: Private JSON Web Key that might be needed to run test script
-                required: false
-            PUBLIC_KEY:
-                description: Public JSON Web Key that might be needed to run test script
-                required: false
-            SLACK_APP_TOKEN:
-                description: Token to authenticate requests to Slack API if necessary
-                required: false
 
 jobs:
     test:
@@ -87,15 +75,16 @@ jobs:
                   path: .
                   pattern: dist
 
-            - name: Load 1Password Environment
-              if: ${{ endsWith(github.event.repository.name, '-service') }}
-              uses: 1password/load-secrets-action@v2
+            - name: Install 1Password CLI
+              uses: 1password/install-cli-action@v1
+
+            - name: Load Environment Variables
+              run: op read op://Github/${{ github.event.repository.name }}/ENV_FILE > .env || true
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  ENV_FILE: op://Github/${{ github.event.repository.name }}/ENV_FILE
 
             - name: Setup Service
-              run: echo "$ENV_FILE" > .env && npm run setup --if-present
+              run: npm run setup --if-present
 
             - name: Run Tests
               run: npm run test
