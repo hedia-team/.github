@@ -55,6 +55,9 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
 
+            - name: Install 1Password CLI
+              uses: 1password/install-cli-action@v1
+
             - name: Setup Node.js Environment
               uses: actions/setup-node@v4
               with:
@@ -75,11 +78,8 @@ jobs:
                   path: .
                   pattern: dist
 
-            - name: Install 1Password CLI
-              uses: 1password/install-cli-action@v1
-
             - name: Load Environment Variables
-              run: op read op://Github/${{ github.event.repository.name }}/ENV_FILE > .env || true
+              run: npm run env:github --if-present
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
