@@ -11,6 +11,10 @@ on:
                 type: string
                 description: A comma-separated list of GitHub teams to request a review from.
                 required: false
+            target:
+                type: string
+                description: Target versions to upgrade to. Options are "latest", "greatest", "minor" or "patch".
+                default: minor
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to create the PR
@@ -46,7 +50,7 @@ jobs:
               run: npm install -g npm-check-updates
 
             - name: Update minor and patch dependencies
-              run: ncu -t minor -u
+              run: ncu -t ${{ inputs.target }} -u
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
