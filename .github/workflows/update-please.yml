@@ -49,7 +49,7 @@ jobs:
             - name: Install npm-check-updates
               run: npm install -g npm-check-updates
 
-            - name: Update minor and patch dependencies
+            - name: Update ${{ inputs.target }} dependencies
               run: ncu -t ${{ inputs.target }} -u
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
