@@ -48,7 +48,7 @@ jobs:
               uses: actions/github-script@v6
               with:
                   script: |
-                      console.log("${{steps.release-please.outputs}}");
+                      console.log(JSON.stringify(${{steps.release-please.outputs}}));
 
                       if (${{steps.release-please.outputs.prs_created}}) {
                           const owner = "${{github.repository_owner}}";
