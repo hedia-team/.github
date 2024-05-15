@@ -55,10 +55,9 @@ jobs:
                           const pull_number = JSON.parse(JSON.stringify(${{steps.release-please.outputs.pr}})).number;
                           const assignees = ["${{github.actor}}"]
                           const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                          const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+                          const team_reviewers = ["backend"];
 
                           console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers);
-                          console.log((await github.rest.teams.listReposInOrg({ org: owner, team_slug: 'backend', page: 1 })).data);
 
                           await github.rest.issues.addAssignees({ owner, repo, issue_number: pull_number, assignees });
                           await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
