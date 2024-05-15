@@ -44,6 +44,8 @@ jobs:
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   target-branch: ${{ github.ref_name }}
         outputs:
+            pr_number: ${{steps.release-please.outputs.pr.number}}
+            prs_created: ${{steps.release-please.outputs.prs_created}}
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
     assign-please:
@@ -53,15 +55,15 @@ jobs:
             - uses: actions/github-script@v6
               with:
                   script: |
-                      // if (${{steps.release-please.outputs.prs_created}}) {
+                      // if (${{needs.release-please.outputs.prs_created}}) {
                         const owner = "${{github.repository_owner}}";
                         const repo = "${{github.event.repository.name}}";
-                        const pull_number = "${{steps.release-please.outputs.pr.number}}";
+                        const pull_number = "${{needs.release-please.outputs.pr_number}}";
                         const assignees = [ "${{github.actor}}" ];
                         const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
                         const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
-                        console.log("${{steps.release-please.outputs.prs_created}}")
+                        console.log("${{needs.release-please.outputs.prs_created}}")
                         console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers)
 
                         await github.rest.issues.addAssignees({ owner, repo, pull_number, assignees });
