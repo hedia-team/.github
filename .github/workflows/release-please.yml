@@ -44,7 +44,7 @@ jobs:
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   target-branch: ${{ github.ref_name }}
         outputs:
-            pr_number: ${{steps.release-please.outputs.pr.number}}
+            pr_number: ${{steps.release-please.outputs}}
             prs_created: ${{steps.release-please.outputs.prs_created}}
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
@@ -55,6 +55,8 @@ jobs:
             - uses: actions/github-script@v6
               with:
                   script: |
+                      console.log("${{needs.release-please.outputs.pr_number}}");
+
                       if (${{needs.release-please.outputs.prs_created}}) {
                           const owner = "${{github.repository_owner}}";
                           const repo = "${{github.event.repository.name}}";
