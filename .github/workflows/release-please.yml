@@ -48,6 +48,7 @@ jobs:
             tag_name: ${{ steps.release-please.outputs.tag_name }}
     assign-please:
         runs-on: ubuntu-latest
+        needs: release-please
         steps:
             - uses: actions/github-script@v6
               with:
@@ -57,12 +58,12 @@ jobs:
                         const repo = "${{github.event.repository.name}}";
                         const pull_number = "${{steps.release-please.outputs.pr.number}}";
                         const assignees = [ "${{github.actor}}" ];
-                        const reviewers = "${{inputs.reviewers}}".split(',');
-                        const team_reviewers = "${{inputs.team-reviewers}}".split(',');
+                        const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
+                        const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
                         console.log("${{steps.release-please.outputs.prs_created}}")
                         console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers)
 
-                        await github.rest.issues.addAssignees({ owner, repo, pull_number, assignee });
+                        await github.rest.issues.addAssignees({ owner, repo, pull_number, assignees });
                         await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
                       // }
