@@ -48,11 +48,11 @@ jobs:
               uses: actions/github-script@v6
               with:
                   script: |
-                      console.log("${{steps.release-please.outputs.releases_created}}");
-                      console.log("${{steps.release-please.outputs.paths_released}}");
-                      console.log("${{steps.release-please.outputs.prs_created}}");
-                      console.log("${{steps.release-please.outputs.pr}}");
-                      console.log("${{steps.release-please.outputs.prs}}");
+                      console.log(${{steps.release-please.outputs.releases_created}});
+                      console.log(${{steps.release-please.outputs.paths_released}});
+                      console.log(${{steps.release-please.outputs.prs_created}});
+                      console.log(${{steps.release-please.outputs.pr}});
+                      console.log(${{steps.release-please.outputs.prs}});
 
                       if (${{steps.release-please.outputs.prs_created}}) {
                           const owner = "${{github.repository_owner}}";
