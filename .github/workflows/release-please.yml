@@ -51,14 +51,14 @@ jobs:
                       if (${{steps.release-please.outputs.prs_created}}) {
                           const owner = "${{github.repository_owner}}";
                           const repo = "${{github.event.repository.name}}";
-                          const pull_number = Number("${{steps.release-please.outputs.pr.number}}");
+                          const pull_number = JSON.parse("${{steps.release-please.outputs.pr}}").number;
                           const assignees = ["${{github.actor}}"]
                           const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
                           const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
                           console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers);
 
-                          await github.rest.issues.addAssignees({ owner, repo, pull_number, assignees });
+                          await github.rest.issues.addAssignees({ owner, repo, issue_number: pull_number, assignees });
                           await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
                       }
         outputs:
