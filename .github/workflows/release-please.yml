@@ -48,19 +48,13 @@ jobs:
               uses: actions/github-script@v6
               with:
                   script: |
-                      console.log(${{steps.release-please.outputs.releases_created}});
-                      console.log(${{steps.release-please.outputs.paths_released}});
-                      console.log(${{steps.release-please.outputs.prs_created}});
-                      console.log(${{steps.release-please.outputs.pr}});
-                      console.log(${{steps.release-please.outputs.prs}});
-
                       if (${{steps.release-please.outputs.prs_created}}) {
-                          const owner = "${{github.repository_owner}}";
-                          const repo = "${{github.event.repository.name}}";
-                          const pull_number = "${{steps.release-please.outputs.pr.number}}";
-                          const assignees = [ "${{github.actor}}" ];
-                          const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                          const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+                          const owner = ${{github.repository_owner}};
+                          const repo = ${{github.event.repository.name}};
+                          const pull_number = ${{steps.release-please.outputs.pr.number}};
+                          const assignees = [ ${{github.actor}} ];
+                          const reviewers = ${{inputs.reviewers}}.split(',').filter((reviewer) => reviewer);
+                          const team_reviewers = ${{inputs.team-reviewers}}.split(',').filter((reviewer) => reviewer);
 
                           console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers)
 
