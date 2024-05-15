@@ -49,10 +49,10 @@ jobs:
               with:
                   script: |
                       if (${{steps.release-please.outputs.prs_created}}) {
-                          const owner = ${{github.repository_owner}};
-                          const repo = ${{github.event.repository.name}};
+                          const owner = "${{github.repository_owner}}";
+                          const repo = "${{github.event.repository.name}}";
                           const pull_number = ${{steps.release-please.outputs.pr.number}};
-                          const assignees = [ ${{github.actor}} ];
+                          const assignees = ["${{github.actor}}"];
                           const reviewers = ${{inputs.reviewers}}.split(',').filter((reviewer) => reviewer);
                           const team_reviewers = ${{inputs.team-reviewers}}.split(',').filter((reviewer) => reviewer);
 
