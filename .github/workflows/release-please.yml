@@ -58,7 +58,7 @@ jobs:
                           const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
                           console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers);
-                          console.log((await github.rest.teams.listReposInOrg({ org: owner, team_slug: 'backend', per_page: 100, page: 2 })).data);
+                          console.log((await github.rest.teams.listReposInOrg({ org: owner, team_slug: 'backend', page: 2 })).data);
 
                           await github.rest.issues.addAssignees({ owner, repo, issue_number: pull_number, assignees });
                           await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
