@@ -54,7 +54,7 @@ jobs:
                           const pull_number = JSON.parse(JSON.stringify(${{steps.release-please.outputs.pr}})).number;
                           const assignees = ["${{github.actor}}"]
                           const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                          const team_reviewers = "backend" // "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+                          const team_reviewers = ["backend"] // "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
                           console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers);
 
