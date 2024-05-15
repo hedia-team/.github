@@ -47,6 +47,7 @@ jobs:
             - name: Assign Please
               uses: actions/github-script@v6
               with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
                       if (${{steps.release-please.outputs.prs_created}}) {
                           const owner = "${{github.repository_owner}}";
