@@ -2,10 +2,14 @@ name: Assign issues and PRs to project
 
 on:
     issues:
-        types: [opened, reopened]
+        types:
+            - opened
+            - reopened
 
     pull_request:
-        types: [opened, reopened]
+        types:
+            - opened
+            - reopened
 
     workflow_call:
         inputs:
