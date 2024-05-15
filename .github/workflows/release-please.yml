@@ -55,17 +55,16 @@ jobs:
             - uses: actions/github-script@v6
               with:
                   script: |
-                      // if (${{needs.release-please.outputs.prs_created}}) {
-                        const owner = "${{github.repository_owner}}";
-                        const repo = "${{github.event.repository.name}}";
-                        const pull_number = "${{needs.release-please.outputs.pr_number}}";
-                        const assignees = [ "${{github.actor}}" ];
-                        const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                        const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+                      if (${{needs.release-please.outputs.prs_created}}) {
+                          const owner = "${{github.repository_owner}}";
+                          const repo = "${{github.event.repository.name}}";
+                          const pull_number = "${{needs.release-please.outputs.pr_number}}";
+                          const assignees = [ "${{github.actor}}" ];
+                          const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
+                          const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
 
-                        console.log("${{needs.release-please.outputs.prs_created}}")
-                        console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers)
+                          console.log(owner, repo, pull_number, assignees, reviewers, team_reviewers)
 
-                        await github.rest.issues.addAssignees({ owner, repo, pull_number, assignees });
-                        await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
-                      // }
+                          await github.rest.issues.addAssignees({ owner, repo, pull_number, assignees });
+                          await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
+                      }
