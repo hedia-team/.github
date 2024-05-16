@@ -2,6 +2,15 @@ name: Release Please
 
 on:
     workflow_call:
+        inputs:
+            reviewers:
+                type: string
+                description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
+                required: false
+            team-reviewers:
+                type: string
+                description: A comma-separated list of GitHub teams to request a review from.
+                required: false
         outputs:
             release_created:
                 description: "Whether or not a release was created"
@@ -28,12 +37,32 @@ jobs:
               contains(github.event.pull_request.labels.*.name, 'autorelease: pending')
             )
         steps:
-            - uses: googleapis/release-please-action@v4
-              id: release-please
+            - id: release-please
+              name: Release Please
+              uses: googleapis/release-please-action@v4
               with:
                   release-type: node
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   target-branch: ${{ github.ref_name }}
+            - name: Assign Please
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      if (${{steps.release-please.outputs.prs_created}}) {
+                          const owner = "${{github.repository_owner}}";
+                          const repo = "${{github.event.repository.name}}";
+                          const pull_number = JSON.parse(JSON.stringify(${{steps.release-please.outputs.pr}})).number;
+                          const assignees = ["${{github.actor}}"];
+                          const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
+                          const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+
+                          console.log(`@${owner}/${repo}#${pull_number}: Assigning PR to ${assignees}`);
+                          console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
+
+                          await github.rest.issues.addAssignees({ owner, repo, issue_number: pull_number, assignees });
+                          await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
+                      }
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
