@@ -33,5 +33,5 @@ jobs:
             - name: Run Redocly Lint
               run: npm run redocly:lint --if-present
 
-            - name: Is the bundle up to date?
+            - name: Check that bundle is up to date
               run: "npm run redocly:bundle && [[ -n $(git status --porcelain) ]] && exit 1 || :"
