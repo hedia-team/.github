@@ -15,7 +15,7 @@ jobs:
   title:
     runs-on: ubuntu-latest
     steps:
-      - name: Title follows Conventional Commits spec
+      - name: Check that title follows Conventional Commits spec
         uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
