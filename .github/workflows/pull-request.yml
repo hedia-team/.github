@@ -66,10 +66,10 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const owner = "${{github.repository_owner}}";
-                      const repo = "${{github.event.repository.name}}";
-                      const issue_number = ${{github.event.pull_request.number}};
-                      const assignees = ["${{github.actor}}"];
+                      const owner = ${{ github.repository_owner }};
+                      const repo = ${{ github.event.repository.name }};
+                      const issue_number = ${{ github.event.pull_request.number }};
+                      const assignees = [${{ github.actor }}];
 
                       console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
 
@@ -84,11 +84,11 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const owner = "${{github.repository_owner}}";
-                      const repo = "${{github.event.repository.name}}";
-                      const pull_number = ${{github.event.pull_request.number}};
-                      const reviewers = "${{github.event.inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                      const team_reviewers = "${{github.event.inputs.team-reviewers || 'backend' }}".split(',').filter((reviewer) => reviewer);
+                      const owner = ${{ github.repository_owner }};
+                      const repo = ${{ github.event.repository.name }};
+                      const pull_number = ${{ github.event.pull_request.number }};
+                      const reviewers = "${{ github.event.inputs.reviewers }}".split(',').filter((reviewer) => reviewer);
+                      const team_reviewers = "${{ github.event.inputs.team-reviewers }}".split(',').filter((reviewer) => reviewer);
 
                       console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
 
@@ -99,10 +99,10 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const owner = "${{github.repository_owner}}";
-                      const repo = "${{github.event.repository.name}}";
-                      const issue_number = ${{github.event.pull_request.number}};
-                      const title = "${{github.event.pull_request.title}}";
+                      const owner = ${{ github.repository_owner }};
+                      const repo = ${{ github.event.repository.name }};
+                      const issue_number = ${{ github.event.pull_request.number }};
+                      const title = ${{ github.event.pull_request.title }};
                       const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\((\w+)\))?(!)?: (.+)$/;
 
                       console.log(`Checking title "${title}"`);
