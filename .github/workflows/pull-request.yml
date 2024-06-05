@@ -84,7 +84,7 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      console.log("${{github.event.pull_request.requested_reviewers}}");
+                      console.log(${{github.event.pull_request.requested_reviewers}});
                       const owner = "${{ github.repository_owner }}";
                       const repo = "${{ github.event.repository.name }}";
                       const pull_number = ${{ github.event.pull_request.number }};
