@@ -35,18 +35,17 @@ jobs:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   project-url: https://github.com/orgs/hedia-team/projects/${{ github.event.inputs.project-id || 2 }}
 
-            - if: false
-              name: Move to In Progress
+            - name: Move to In Progress
               uses: actions/github-script@v7
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const projectId = Number("${{ github.event.inputs.project-id || 2 }}");
+                      const projectId = ${{ github.event.inputs.project-id || 2 }};
                       const itemId = "${{ steps.link-project.outputs.itemId }}";
                       const fieldId = "PVTSSF_lADOAbxhxs4AMUvgzgH3I2s";
                       const value = "In Progress"
 
-                      const updatedItem: ProjectUpdateFieldItemResponse = await github.graphql(
+                      await github.graphql(
                           `mutation updateProjectV2ItemFieldValue($input: UpdateProjectV2ItemFieldValueInput!) {
                               updateProjectV2ItemFieldValue(input: $input) { projectV2Item { id } }
                           }`,
