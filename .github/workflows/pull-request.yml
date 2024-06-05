@@ -1,0 +1,137 @@
+name: Pull Request
+
+on:
+    pull_request:
+        types:
+            - edited
+            - opened
+            - ready_for_review
+            - reopened
+
+    workflow_call:
+        inputs:
+            project-id:
+                description: The issue will be assigned to that project.
+                required: true
+                type: number
+            reviewers:
+                type: string
+                description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
+                required: false
+            team-reviewers:
+                type: string
+                description: A comma-separated list of GitHub teams to request a review from.
+                required: false
+
+jobs:
+    pull-request:
+        runs-on: ubuntu-latest
+        steps:
+            - id: link-project
+              name: Link Project
+              uses: actions/add-to-project@releases/v1
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  project-url: https://github.com/orgs/hedia-team/projects/${{ github.event.inputs.project-id || 2 }}
+
+            - name: Move to In Progress
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const projectId = ${{ github.event.inputs.project-id || 2 }};
+                      const itemId = ${{ steps.link-project.outputs.itemId }};
+                      const fieldId = "PVTSSF_lADOAbxhxs4AMUvgzgH3I2s";
+                      const value = "In Progress"
+
+                      const updatedItem: ProjectUpdateFieldItemResponse = await github.graphql(
+                          `mutation updateProjectV2ItemFieldValue($input: UpdateProjectV2ItemFieldValueInput!) {
+                              updateProjectV2ItemFieldValue(input: $input) { projectV2Item { id } }
+                          }`,
+                          {
+                              input: {
+                                  projectId,
+                                  itemId,
+                                  fieldId,
+                                  value: { singleSelectOptionId: value }
+                              }
+                          }
+                      );
+
+            - if: github.event.pull_request.assignees == null
+              name: Assign Actor
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{github.repository_owner}}";
+                      const repo = "${{github.event.repository.name}}";
+                      const issue_number = ${{github.event_name == 'issue' && github.event.issue.number || github.event.pull_request.number}};
+                      const assignees = ["${{github.actor}}"];
+
+                      console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
+
+                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
+
+            - if: >
+                  github.event.pull_request.draft == false &&
+                  github.event.pull_request.requested_reviewers == null &&
+                  github.event.pull_request.requested_teams == null
+              name: Request Reviewers
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{github.repository_owner}}";
+                      const repo = "${{github.event.repository.name}}";
+                      const pull_number = ${{github.event.pull_request.number}};
+                      const reviewers = "${{inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
+                      const team_reviewers = "${{inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+
+                      console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
+
+                      await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
+
+            - name: Set Labels
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{github.repository_owner}}";
+                      const repo = "${{github.event.repository.name}}";
+                      const issue_number = ${{github.event.issue.number}};
+                      const title = "${{github.event.issue.title}}";
+                      const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\((\w+)\))?(!)?: (.+)$/;
+
+                      console.log(`Checking title "${title}"`);
+                      console.log("For more information: https://www.conventionalcommits.org/en/v1.0.0/");
+
+                      if (!regex.test(title)) {
+                          throw new Error("Title must follow conventional commit format");
+                      }
+
+                      const labels = [];
+                      const match = title.match(regex);
+
+                      switch (match[1]) {
+                          case "feat":
+                              labels.push("feature");
+                              break;
+                          default:
+                              labels.push(match[1]);
+                              break;
+                      }
+
+                      if (match[3]) {
+                          labels.push("major");
+                      }
+                      else if (labels.includes("feature")) {
+                          labels.push("minor");
+                      }
+                      else {
+                          labels.push("patch");
+                      }
+
+                      console.log(`@${owner}/${repo}#${issue_number}: Setting labels to ${labels}`);
+
+                      await github.rest.issues.setLabels({ owner, repo, issue_number, labels });
