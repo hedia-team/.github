@@ -22,13 +22,13 @@ jobs:
 
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   ref: ${{ inputs.github_ref }}
                   fetch-depth: 1
 
             - name: Setup Node.js Environment
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version-file: "package.json"
                   always-auth: true
