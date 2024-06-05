@@ -29,10 +29,10 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const owner = ${{ github.repository_owner }};
-                      const repo = ${{ github.event.repository.name }};
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
                       const issue_number = ${{ github.event.issue.number }};
-                      const title = ${{ github.event.issue.title }};
+                      const title = "${{ github.event.issue.title }}";
                       const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\((\w+)\))?(!)?: (.+)$/;
 
                       console.log(`Checking title "${title}"`);
