@@ -69,7 +69,7 @@ jobs:
                       const owner = ${{ github.repository_owner }};
                       const repo = ${{ github.event.repository.name }};
                       const issue_number = ${{ github.event.pull_request.number }};
-                      const assignees = [${{ github.actor }}];
+                      const assignees = ["${{ github.actor }}"];
 
                       console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
 
