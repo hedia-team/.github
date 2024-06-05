@@ -60,7 +60,7 @@ jobs:
                           }
                       );
 
-            - if: github.event.pull_request.assignees == null
+            - if: github.event.pull_request.assignees.length == 0
               name: Assign Actor
               uses: actions/github-script@v7
               with:
