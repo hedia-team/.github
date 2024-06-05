@@ -3,18 +3,11 @@ name: Update Please
 on:
     workflow_call:
         inputs:
-            reviewers:
-                type: string
-                description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
-                required: false
-            team-reviewers:
-                type: string
-                description: A comma-separated list of GitHub teams to request a review from.
-                required: false
             target:
                 type: string
                 description: Target versions to upgrade to. For example, "latest", "minor" or "patch".
                 default: minor
+
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to create the PR
@@ -35,7 +28,7 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
               with:
-                  fetch-depth: 1
+                  token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
             - name: Setup Node.js Environment
               uses: actions/setup-node@v4
@@ -49,25 +42,47 @@ jobs:
             - name: Install npm-check-updates
               run: npm install -g npm-check-updates
 
+            - name: Checkout Branch
+              run: git checkout -b update-please-${{ github.sha }}
+
             - name: Update ${{ inputs.target || 'minor' }} dependencies
-              run: ncu -t ${{ inputs.target || 'minor' }} -u
+              run: ncu -t ${{ inputs.target || 'minor' }} -u --install always
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - name: Install updated dependencies
-              run: npm install
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+            - id: up-to-date
+              name: Check if dependencies are up-to-date
+              run: "[[ -n $(git status --porcelain) ]] && echo 'false' >> $GITHUB_OUTPUT || echo 'true' >> $GITHUB_OUTPUT"
 
-            - name: Create Pull Request
-              uses: hedia-team/create-pull-request@v6
+            - if: steps.up-to-date.outputs == 'false'
+              name: Commit Changes
+              run: |
+                  git add .
+                  git commit -m "chore(deps): update dependencies"
+                  git push -u origin update-please-${{ github.sha }}
+
+            - if: steps.up-to-date.outputs == 'false'
+              id: create-pull-request
+              name: Create Pull Request
+              uses: actions/github-script@v7
               with:
-                  token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  commit-message: "chore(deps): update dependencies"
-                  title: "chore(deps): update dependencies"
-                  body: "Update Please has found one or more dependencies to be updated! 🚀"
-                  branch: update-please-${{ github.sha }}
-                  labels: chore
-                  assignees: ${{ github.event_name == 'workflow_dispatch' && github.actor || 'hedia-bot' }}
-                  reviewers: ${{ inputs.reviewers }}
-                  team-reviewers: ${{ inputs.team-reviewers }}
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{github.repository_owner}}";
+                      const repo = "${{github.event.repository.name}}";
+                      const head = `update-please-${{ github.sha }}`;
+                      const base = "main";
+                      const title = "chore(deps): update dependencies";
+                      const body = "Update Please has found one or more dependencies to be updated! 🚀"
+
+                      const { data } = await github.pulls.create({ owner, repo, head, base, title, body });
+
+                      console.log(`@${owner}/${repo}#${data.number}: PR Created`);
+
+                      return { pull_number: data.number};
+
+            - if: steps.up-to-date.outputs == 'false'
+              name: Enable Auto-Merge
+              run: gh pr merge ${{ steps.create-pull-request.outputs.result.pull_number }} --auto --squash --repo="${{ github.repository }}"
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
