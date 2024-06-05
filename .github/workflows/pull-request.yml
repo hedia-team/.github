@@ -40,7 +40,7 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const projectId = ${{ github.event.inputs.project-id || 2 }};
+                      const projectId = ${{ github.event.inputs.project-id || 'PVT_kwDOAbxhxs4AMUvg' }};
                       const itemId = "${{ steps.link-project.outputs.itemId }}";
                       const fieldId = "PVTSSF_lADOAbxhxs4AMUvgzgH3I2s";
                       const value = "In Progress"
