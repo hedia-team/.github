@@ -20,7 +20,6 @@ on:
                 description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
                 required: false
             team-reviewers:
-                default: backend
                 type: string
                 description: A comma-separated list of GitHub teams to request a review from.
                 required: false
@@ -89,7 +88,7 @@ jobs:
                       const repo = "${{github.event.repository.name}}";
                       const pull_number = ${{github.event.pull_request.number}};
                       const reviewers = "${{github.event.inputs.reviewers}}".split(',').filter((reviewer) => reviewer);
-                      const team_reviewers = "${{github.event.inputs.team-reviewers}}".split(',').filter((reviewer) => reviewer);
+                      const team_reviewers = "${{github.event.inputs.team-reviewers || 'backend' }}".split(',').filter((reviewer) => reviewer);
 
                       console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
 
