@@ -20,6 +20,7 @@ on:
                 description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
                 required: false
             team-reviewers:
+                default: backend
                 type: string
                 description: A comma-separated list of GitHub teams to request a review from.
                 required: false
@@ -77,8 +78,8 @@ jobs:
 
             - if: >
                   github.event.pull_request.draft == false &&
-                  github.event.pull_request.requested_reviewers == null &&
-                  github.event.pull_request.requested_teams == null
+                  github.event.pull_request.requested_reviewers.length == 0 &&
+                  github.event.pull_request.requested_teams.length == 0
               name: Request Reviewers
               uses: actions/github-script@v7
               with:
