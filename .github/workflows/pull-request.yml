@@ -54,7 +54,7 @@ jobs:
                                   projectId,
                                   itemId,
                                   fieldId,
-                                  value: { singleSelectOptionId: value }
+                                  value
                               }
                           }
                       );
