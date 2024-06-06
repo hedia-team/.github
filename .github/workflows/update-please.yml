@@ -76,7 +76,7 @@ jobs:
                       const title = "chore(deps): update dependencies";
                       const body = "Update Please has found one or more dependencies to be updated! 🚀";
 
-                      const { data } = await github.pulls.create({ owner, repo, head, base, title, body });
+                      const { data } = await github.rest.pulls.create({ owner, repo, head, base, title, body });
 
                       console.log(`@${owner}/${repo}#${data.number}: PR Created`);
 
