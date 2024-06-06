@@ -73,7 +73,7 @@ jobs:
                       const owner = "${{ github.repository_owner }}";
                       const repo = "${{ github.event.repository.name }}";
                       const head = "update-please-${{ github.sha }}";
-                      const base = "main";
+                      const base = "${{ github.ref_name }}";
                       const title = "chore(deps): update dependencies";
                       const body = "Update Please has found one or more dependencies to be updated! 🚀";
 
