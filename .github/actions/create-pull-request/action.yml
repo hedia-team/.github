@@ -49,10 +49,12 @@ runs:
           run: |
               git config user.email 74369034+hedia-bot@users.noreply.github.com
               git config user.name hedia-bot
-              git checkout -b ${{ github.event.inputs.head }}
+              git checkout -b $HEAD
               git add .
               git commit -m ${{ github.event.inputs.commit || github.event.inputs.title }}
               git push ${{ github.event.inputs.force && '-f' || '' }} -u origin ${{ github.event.inputs.head }}
+          env:
+              HEAD: "${{ inputs.head }}"
 
         - if: |
               steps.git-status.outputs.changes == 'true' &&
