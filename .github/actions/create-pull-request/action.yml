@@ -37,13 +37,13 @@ runs:
           shell: bash
           run: "[[ -n $(git status --porcelain) ]] && echo 'changes=true' >> $GITHUB_OUTPUT || echo 'changes=false' >> $GITHUB_OUTPUT"
 
-        - if: steps.git-status.outputs.changes == 'false'
+        - if: steps.git-status.outputs.changes == 'true'
           id: git-remote
           name: Git Remote
           shell: bash
           run: "[[ -n $(git ls-remote --heads origin refs/heads/${{ github.event.inputs.head }}) ]] && echo 'branch=true' >> $GITHUB_OUTPUT || echo 'branch=false' >> $GITHUB_OUTPUT"
 
-        - if: steps.git-status.outputs.changes == 'false'
+        - if: steps.git-status.outputs.changes == 'true'
           name: Commit Changes
           shell: bash
           run: |
@@ -55,7 +55,7 @@ runs:
               git push ${{ github.event.inputs.force && '-f' || '' }} -u origin ${{ github.event.inputs.head }}
 
         - if: |
-              steps.git-status.outputs.changes == 'false' &&
+              steps.git-status.outputs.changes == 'true' &&
               steps.git-remote.outputs.branch == 'false'
           id: create-pull-request
           name: Create Pull Request
@@ -78,7 +78,7 @@ runs:
                   return { pull_number: data.number };
 
         - if: |
-              steps.git-status.outputs.changes == 'false' &&
+              steps.git-status.outputs.changes == 'true' &&
               steps.git-remote.outputs.branch == 'false' &&
               github.event.inputs.auto-merge
           name: Enable Auto-Merge
