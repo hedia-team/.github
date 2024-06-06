@@ -106,7 +106,7 @@ jobs:
                       else if (labels.includes("feature")) {
                           labels.push("minor");
                       }
-                      else {
+                      else if (labels.includes("fix")) {
                           labels.push("patch");
                       }
 
