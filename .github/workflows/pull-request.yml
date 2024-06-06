@@ -11,10 +11,6 @@ on:
 
     workflow_call:
         inputs:
-            project-id:
-                description: The pull request will be assigned to that project.
-                required: true
-                type: number
             reviewers:
                 type: string
                 description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
@@ -33,31 +29,12 @@ jobs:
               uses: actions/add-to-project@releases/v1
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  project-url: https://github.com/orgs/hedia-team/projects/${{ github.event.inputs.project-id || 2 }}
+                  project-url: https://github.com/orgs/hedia-team/projects/2
 
             - name: Move to In Progress
-              uses: actions/github-script@v7
-              with:
-                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  script: |
-                      const projectId = "PVT_kwDOAbxhxs4AMUvg";
-                      const itemId = "${{ steps.link-project.outputs.itemId }}";
-                      const fieldId = "PVTSSF_lADOAbxhxs4AMUvgzgH3I2s";
-                      const value = "In Progress"
-
-                      await github.graphql(
-                          `mutation updateProjectV2ItemFieldValue($input: UpdateProjectV2ItemFieldValueInput!) {
-                              updateProjectV2ItemFieldValue(input: $input) { projectV2Item { id } }
-                          }`,
-                          {
-                              input: {
-                                  projectId,
-                                  itemId,
-                                  fieldId,
-                                  value: { "singleSelectOptionId": value }
-                              }
-                          }
-                      );
+              run: gh project item-edit --id ${{ steps.link-project.outputs.itemId }} --project-id PVT_kwDOAbxhxs4AMUvg --field-id PVTSSF_lADOAbxhxs4AMUvgzgH3I2s --single-select-option-id 47fc9ee4
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
             - if: github.event.pull_request.assignees[0] == null
               name: Assign Actor

@@ -8,11 +8,6 @@ on:
             - reopened
 
     workflow_call:
-        inputs:
-            project-id:
-                description: The issue will be assigned to that project.
-                required: true
-                type: number
 
 jobs:
     issue:
@@ -22,7 +17,7 @@ jobs:
               uses: actions/add-to-project@releases/v1
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  project-url: https://github.com/orgs/hedia-team/projects/${{ github.event.inputs.project-id || 2 }}
+                  project-url: https://github.com/orgs/hedia-team/projects/2
 
             - name: Set Labels
               uses: actions/github-script@v7
