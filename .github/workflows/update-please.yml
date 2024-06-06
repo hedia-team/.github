@@ -42,49 +42,18 @@ jobs:
             - name: Install npm-check-updates
               run: npm install -g npm-check-updates
 
-            - name: Checkout Branch
-              run: git checkout -b update-please-${{ github.sha }}
-
             - name: Update ${{ inputs.target || 'minor' }} dependencies
               run: ncu -t ${{ inputs.target || 'minor' }} -u --install always
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - id: check-dependencies
-              name: Check if dependencies are up-to-date
-              run: "[[ -n $(git status --porcelain) ]] && echo 'up-to-date=false' >> $GITHUB_OUTPUT || echo 'up-to-date=true' >> $GITHUB_OUTPUT"
-
-            - if: steps.check-dependencies.outputs.up-to-date == 'false'
-              name: Commit Changes
-              run: |
-                  git config user.email 74369034+hedia-bot@users.noreply.github.com
-                  git config user.name hedia-bot
-                  git add .
-                  git commit -m "chore(deps): update dependencies"
-                  git push -f -u origin update-please-${{ github.sha }}
-
-            - if: steps.check-dependencies.outputs.up-to-date == 'false'
-              id: create-pull-request
-              name: Create Pull Request
-              uses: actions/github-script@v7
+            - name: Create Pull Request
+              uses: ./.github/actions/create-pull-request.yml
               with:
+                  auto-merge: true
+                  base: ${{ github.ref_name }}
+                  body: "Update Please has found one or more dependencies to be updated! 🚀"
+                  force: true
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  script: |
-                      const owner = "${{ github.repository_owner }}";
-                      const repo = "${{ github.event.repository.name }}";
-                      const head = "update-please-${{ github.sha }}";
-                      const base = "${{ github.ref_name }}";
-                      const title = "chore(deps): update dependencies";
-                      const body = "Update Please has found one or more dependencies to be updated! 🚀";
-
-                      const { data } = await github.rest.pulls.create({ owner, repo, head, base, title, body });
-
-                      console.log(`@${owner}/${repo}#${data.number}: PR Created`);
-
-                      return { pull_number: data.number };
-
-            - if: steps.check-dependencies.outputs.up-to-date == 'false'
-              name: Enable Auto-Merge
-              run: gh pr merge ${{ steps.create-pull-request.outputs.result.pull_number }} --auto --squash
-              env:
-                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  head: "update-please-${{ github.sha }}"
+                  title: "chore(deps): update dependencies"
