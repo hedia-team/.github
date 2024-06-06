@@ -61,7 +61,7 @@ jobs:
                   git config user.name hedia-bot
                   git add .
                   git commit -m "chore(deps): update dependencies"
-                  git push -u origin update-please-${{ github.sha }}
+                  git push -f -u origin update-please-${{ github.sha }}
 
             - if: steps.check-dependencies.outputs.up-to-date == 'false'
               id: create-pull-request
