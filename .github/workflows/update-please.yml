@@ -48,7 +48,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Create Pull Request
-              uses: ./.github/actions/create-pull-request
+              uses: hedia-team/.github/.github/actions/create-pull-request@big-refactor
               with:
                   auto-merge: true
                   base: ${{ github.ref_name }}
