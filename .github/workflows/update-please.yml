@@ -27,6 +27,7 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
               with:
+                  ref: ${{ github.ref_name }}
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
             - name: Setup Node.js Environment
@@ -56,8 +57,8 @@ jobs:
             - if: steps.check-dependencies.outputs.up-to-date == 'false'
               name: Commit Changes
               run: |
-                  git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-                  git config user.name ${{ github.actor }}
+                  git config user.email 74369034+hedia-bot@users.noreply.github.com
+                  git config user.name hedia-bot
                   git add .
                   git commit -m "chore(deps): update dependencies"
                   git push -u origin update-please-${{ github.sha }}
