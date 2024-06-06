@@ -33,8 +33,6 @@ jobs:
 
             - name: Move to In Progress
               run: gh project item-edit --id ${{ steps.link-project.outputs.itemId }} --project-id PVT_kwDOAbxhxs4AMUvg --field-id PVTSSF_lADOAbxhxs4AMUvgzgH3I2s --single-select-option-id 47fc9ee4
-              env:
-                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
             - if: github.event.pull_request.assignees[0] == null
               name: Assign Actor
