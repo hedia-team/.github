@@ -48,7 +48,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Create Pull Request
-              uses: ./.github/actions/create-pull-request.yml
+              uses: ./.github/actions/create-pull-request
               with:
                   auto-merge: true
                   base: ${{ github.ref_name }}
