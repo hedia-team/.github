@@ -84,6 +84,7 @@ runs:
                   });
 
                   if (pullRequests.length !== 0) {
+                    console.dir(pullRequests, {depth: 100});
                     return { pull_number: pullRequests[0].number };
                   }
 
