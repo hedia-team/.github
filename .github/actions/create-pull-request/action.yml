@@ -41,7 +41,9 @@ runs:
           id: git-remote
           name: Git Remote
           shell: bash
-          run: "[[ -n $(git ls-remote --heads origin refs/heads/${{ github.event.inputs.head }}) ]] && echo 'branch=true' >> $GITHUB_OUTPUT || echo 'branch=false' >> $GITHUB_OUTPUT"
+          run: "[[ -n $(git ls-remote --heads origin refs/heads/$HEAD) ]] && echo 'branch=true' >> $GITHUB_OUTPUT || echo 'branch=false' >> $GITHUB_OUTPUT"
+          env:
+              HEAD: ${{ inputs.head }}
 
         - if: steps.git-status.outputs.changes == 'true'
           name: Commit Changes
@@ -51,10 +53,13 @@ runs:
               git config user.name hedia-bot
               git checkout -b $HEAD
               git add .
-              git commit -m ${{ github.event.inputs.commit || github.event.inputs.title }}
-              git push ${{ github.event.inputs.force && '-f' || '' }} -u origin ${{ github.event.inputs.head }}
+              [ -n $COMMIT ] && git commit -m $COMMIT || git commit -m $TITLE
+              [ -n $FORCE ] && git push -f -u origin $HEAD || git push -u origin $HEAD
           env:
-              HEAD: "${{ inputs.head }}"
+              COMMIT: ${{ inputs.commit }}
+              FORCE: ${{ inputs.force }}
+              HEAD: ${{ inputs.head }}
+              TITLE: ${{ inputs.title }}
 
         - if: |
               steps.git-status.outputs.changes == 'true' &&
