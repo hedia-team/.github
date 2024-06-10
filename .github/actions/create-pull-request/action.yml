@@ -55,6 +55,7 @@ runs:
               git add .
               [ -n $COMMIT ] && git commit -m "$COMMIT" || git commit -m "$TITLE"
               [ -n $FORCE ] && git push -f -u origin $HEAD || git push -u origin $HEAD
+              echo $ENV
           env:
               COMMIT: ${{ inputs.commit }}
               FORCE: ${{ inputs.force }}
@@ -68,23 +69,32 @@ runs:
           name: Create Pull Request
           uses: actions/github-script@v7
           with:
-              github-token: ${{ github.event.inputs.github-token }}
+              github-token: ${{ inputs.github-token }}
               script: |
-                  const owner = "${{ github.repository_owner }}";
-                  const repo = "${{ github.event.repository.name }}";
-                  const base = "${{ github.event.inputs.base || github.event.repository.default_branch }}";
-                  const head = "${{ github.event.inputs.head }}";
-                  const title = "${{ github.event.inputs.title }}";
-                  const body = "${{ github.event.inputs.body }}" || null;
-                  const draft = ${{ github.event.inputs.draft && true || false }};
+                  const { BASE, BODY, DEFAULT_BRANCH, DRAFT, HEAD, OWNER, REPO, TITLE } = process.env;
 
-                  const { data } = await github.rest.pulls.create({ owner, repo, head, base, title, body, draft });
+                  const { data } = await github.rest.pulls.create({
+                    owner: OWNER,
+                    repo: REPO,
+                    base: BASE ?? DEFAULT_BRANCH,
+                    head: HEAD,
+                    title: TITLE,
+                    body: BODY ?? null,
+                    draft: DRAFT ?? true : false
+                  });
 
                   console.log(`@${owner}/${repo}#${data.number}: PR Created`);
 
                   return { pull_number: data.number };
           env:
-              github-token: ${{ github.event.inputs.github-token }}
+              BASE: ${{ inputs.base }}
+              BODY: ${{ inputs.body }}
+              DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+              DRAFT: ${{ inputs.draft }}
+              HEAD: ${{ inputs.head }}
+              OWNER: ${{ github.repository_owner }}
+              REPO: ${{ github.event.repository.name }}
+              TITLE: ${{ inputs.title }}
 
         - if: |
               steps.git-status.outputs.changes == 'true' &&
