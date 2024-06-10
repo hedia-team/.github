@@ -90,7 +90,7 @@ runs:
                     draft: DRAFT ? true : false
                   });
 
-                  console.log(`@${owner}/${repo}#${data.number}: PR Created`);
+                  console.log(`@${OWNER}/${REPO}#${data.number}: PR Created`);
 
                   return { pull_number: data.number };
           env:
