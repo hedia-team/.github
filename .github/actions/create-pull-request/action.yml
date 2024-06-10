@@ -99,7 +99,7 @@ runs:
         - if: |
               steps.git-status.outputs.changes == 'true' &&
               steps.git-remote.outputs.branch == 'false' &&
-              github.event.inputs.auto-merge
+              inputs.auto-merge
           name: Enable Auto-Merge
           shell: bash
           run: gh pr merge ${{ steps.create-pull-request.outputs.result.pull_number }} --auto --squash
