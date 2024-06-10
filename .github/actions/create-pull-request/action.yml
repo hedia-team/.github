@@ -31,7 +31,7 @@ inputs:
         required: false
 
 outputs:
-    pull_number:
+    pull-number:
         description: The number of the PR that was created or updated if any.
         value: ${{ steps.create-pull-request.outputs.result.pull_number }}
 
