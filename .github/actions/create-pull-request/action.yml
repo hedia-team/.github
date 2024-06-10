@@ -53,7 +53,7 @@ runs:
               git config user.name hedia-bot
               git checkout -b $HEAD
               git add .
-              [ -n $COMMIT ] && git commit -m $COMMIT || git commit -m $TITLE
+              [ -n $COMMIT ] && git commit -m "$COMMIT" || git commit -m "$TITLE"
               [ -n $FORCE ] && git push -f -u origin $HEAD || git push -u origin $HEAD
           env:
               COMMIT: ${{ inputs.commit }}
