@@ -76,18 +76,18 @@ runs:
               script: |
                   const { BASE, BODY, DEFAULT_BRANCH, DRAFT, HEAD, OWNER, REPO, TITLE } = process.env;
 
-                  const { data } = await github.rest.pulls.list({
+                  const { data: pullRequests } = await github.rest.pulls.list({
                     owner: OWNER,
                     repo: REPO,
                     base: BASE ?? DEFAULT_BRANCH,
                     head: HEAD
                   });
 
-                  if (data.length !== 0) {
-                    return { pull_number: data[0].number };
+                  if (pullRequests.length !== 0) {
+                    return { pull_number: pullRequests[0].number };
                   }
 
-                  const { data } = await github.rest.pulls.create({
+                  const { data: pullRequest } = await github.rest.pulls.create({
                     owner: OWNER,
                     repo: REPO,
                     base: BASE ?? DEFAULT_BRANCH,
@@ -97,9 +97,9 @@ runs:
                     draft: DRAFT ? true : false
                   });
 
-                  console.log(`@${OWNER}/${REPO}#${data.number}: PR Created`);
+                  console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
 
-                  return { pull_number: data.number };
+                  return { pull_number: pullRequest.number };
           env:
               BASE: ${{ inputs.base }}
               BODY: ${{ inputs.body }}
