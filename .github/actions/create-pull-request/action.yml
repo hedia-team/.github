@@ -29,6 +29,12 @@ inputs:
     draft:
         description: Whether to create the PR as a draft. Default to false.
         required: false
+
+outputs:
+    pull-number:
+        description: The number of the PR that was created or updated if any.
+        value: ${{ steps.create-pull-request.outputs.result.pull_number }}
+
 runs:
     using: "composite"
     steps:
@@ -36,14 +42,6 @@ runs:
           name: Git Status
           shell: bash
           run: "[[ -n $(git status --porcelain) ]] && echo 'changes=true' >> $GITHUB_OUTPUT || echo 'changes=false' >> $GITHUB_OUTPUT"
-
-        - if: steps.git-status.outputs.changes == 'true'
-          id: git-remote
-          name: Git Remote
-          shell: bash
-          run: '[[ -n $(git ls-remote --heads origin "refs/heads/${HEAD}") ]] && echo "branch=true" >> $GITHUB_OUTPUT || echo "branch=false" >> $GITHUB_OUTPUT'
-          env:
-              HEAD: ${{ inputs.head }}
 
         - if: steps.git-status.outputs.changes == 'true'
           name: Git Config
@@ -69,9 +67,7 @@ runs:
               HEAD: ${{ inputs.head }}
               TITLE: ${{ inputs.title }}
 
-        - if: |
-              steps.git-status.outputs.changes == 'true' &&
-              steps.git-remote.outputs.branch == 'false'
+        - if: steps.git-status.outputs.changes == 'true'
           id: create-pull-request
           name: Create Pull Request
           uses: actions/github-script@v7
@@ -79,6 +75,17 @@ runs:
               github-token: ${{ inputs.github-token }}
               script: |
                   const { BASE, BODY, DEFAULT_BRANCH, DRAFT, HEAD, OWNER, REPO, TITLE } = process.env;
+
+                  const { data } = await github.rest.pulls.list({
+                    owner: OWNER,
+                    repo: REPO,
+                    base: BASE ?? DEFAULT_BRANCH,
+                    head: HEAD
+                  });
+
+                  if (data.length !== 0) {
+                    return { pull_number: data[0].number };
+                  }
 
                   const { data } = await github.rest.pulls.create({
                     owner: OWNER,
@@ -103,10 +110,7 @@ runs:
               REPO: ${{ github.event.repository.name }}
               TITLE: ${{ inputs.title }}
 
-        - if: |
-              steps.git-status.outputs.changes == 'true' &&
-              steps.git-remote.outputs.branch == 'false' &&
-              inputs.auto-merge
+        - if: steps.git-status.outputs.changes == 'true' && inputs.auto-merge
           name: Enable Auto-Merge
           shell: bash
           run: gh pr merge $PULL_NUMBER --auto --squash

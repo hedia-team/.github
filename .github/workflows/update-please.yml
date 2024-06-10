@@ -47,7 +47,8 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - name: Create Pull Request
+            - id: create-pull-request
+              name: Create Pull Request
               uses: hedia-team/.github/.github/actions/create-pull-request@big-refactor
               with:
                   auto-merge: true
@@ -57,3 +58,17 @@ jobs:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   head: "update-please-${{ github.sha }}"
                   title: "chore(deps): update dependencies"
+
+            - name: Assign Actor
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
+                      const issue_number = ${{ steps.create-pull-request.outputs.pull_number }};
+                      const assignees = ["${{ github.actor }}"];
+
+                      console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
+
+                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
