@@ -31,9 +31,9 @@ inputs:
         required: false
 
 outputs:
-    pull-number:
+    pull_number:
         description: The number of the PR that was created or updated if any.
-        value: ${{ steps.create-pull-request.outputs.result.pull-number }}
+        value: ${{ steps.create-pull-request.outputs.result.pull_number }}
 
 runs:
     using: "composite"
@@ -84,7 +84,7 @@ runs:
                   });
 
                   if (pullRequests.length !== 0) {
-                    return { pull-number: pullRequests[0].number };
+                    return { pull_number: pullRequests[0].number };
                   }
 
                   const { data: pullRequest } = await github.rest.pulls.create({
@@ -99,7 +99,7 @@ runs:
 
                   console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
 
-                  return { pull-number: pullRequest.number };
+                  return { pull_number: pullRequest.number };
           env:
               BASE: ${{ inputs.base }}
               BODY: ${{ inputs.body }}
@@ -116,4 +116,4 @@ runs:
           run: gh pr merge $PULL_NUMBER --auto --squash
           env:
               GH_TOKEN: ${{ inputs.github-token }}
-              PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull-number }}
+              PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
