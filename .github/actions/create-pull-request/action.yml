@@ -41,7 +41,7 @@ runs:
           id: git-remote
           name: Git Remote
           shell: bash
-          run: "[[ -n $(git ls-remote --heads origin refs/heads/$HEAD) ]] && echo 'branch=true' >> $GITHUB_OUTPUT || echo 'branch=false' >> $GITHUB_OUTPUT"
+          run: '[[ -n $(git ls-remote --heads origin "refs/heads/${HEAD})" ]] && echo "branch=true" >> $GITHUB_OUTPUT || echo "branch=false" >> $GITHUB_OUTPUT'
           env:
               HEAD: ${{ inputs.head }}
 
@@ -49,7 +49,7 @@ runs:
           name: Git Config
           shell: bash
           run: |
-              [ -n $ACTOR ] && git config user.email "$(ACTOR_ID)+$(ACTOR)@users.noreply.github.com" || git config user.email 74369034+hedia-bot@users.noreply.github.com
+              [ -n $ACTOR ] && git config user.email "${ACTOR_ID}+${ACTOR}@users.noreply.github.com" || git config user.email 74369034+hedia-bot@users.noreply.github.com
               [ -n $ACTOR ] && git config user.name $ACTOR || git config user.name hedia-bot
           env:
               ACTOR_ID: ${{ github.actor_id }}
