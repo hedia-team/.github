@@ -111,4 +111,4 @@ runs:
           shell: bash
           run: gh pr merge ${{ steps.create-pull-request.outputs.result.pull_number }} --auto --squash
           env:
-              GH_TOKEN: ${{ github.event.inputs.github-token }}
+              GH_TOKEN: ${{ inputs.github-token }}
