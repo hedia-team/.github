@@ -87,7 +87,7 @@ runs:
                     head: HEAD,
                     title: TITLE,
                     body: BODY ?? null,
-                    draft: DRAFT ?? true : false
+                    draft: DRAFT ? true : false
                   });
 
                   console.log(`@${owner}/${repo}#${data.number}: PR Created`);
