@@ -8,6 +8,10 @@ on:
             - reopened
 
     workflow_call:
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to link project
+                required: true
 
 jobs:
     issue:

@@ -18,6 +18,10 @@ on:
                 type: string
                 description: A comma-separated list of GitHub teams to request a review from.
                 required: false
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to link project
+                required: true
 
 jobs:
     pull-request:
