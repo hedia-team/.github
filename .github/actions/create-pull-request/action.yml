@@ -33,7 +33,7 @@ inputs:
 outputs:
     pull-number:
         description: The number of the PR that was created or updated if any.
-        value: ${{ steps.create-pull-request.outputs.result.pull_number }}
+        value: ${{ steps.set-output.outputs.pull-number }}
 
 runs:
     using: "composite"
@@ -116,4 +116,12 @@ runs:
           run: gh pr merge $PULL_NUMBER --auto --squash
           env:
               GH_TOKEN: ${{ inputs.github-token }}
+              PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
+
+        - if: steps.git-status.outputs.changes == 'true'
+          id: set-output
+          name: Set Output
+          shell: bash
+          run: echo "pull-number=$PULL_NUMBER" >> "$GITHUB_OUTPUT"
+          env:
               PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
