@@ -24,6 +24,6 @@ jobs:
                   project-url: https://github.com/orgs/hedia-team/projects/2
 
             - name: Set Labels
-              uses: hedia-team/.github/.github/actions/set-labels@big-refactor
+              uses: hedia-team/.github/.github/actions/set-labels@main
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}

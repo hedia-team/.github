@@ -74,6 +74,6 @@ jobs:
                       await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
 
             - name: Set Labels
-              uses: hedia-team/.github/.github/actions/set-labels@big-refactor
+              uses: hedia-team/.github/.github/actions/set-labels@main
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}

@@ -49,7 +49,7 @@ jobs:
 
             - id: create-pull-request
               name: Create Pull Request
-              uses: hedia-team/.github/.github/actions/create-pull-request@big-refactor
+              uses: hedia-team/.github/.github/actions/create-pull-request@main
               with:
                   auto-merge: true
                   base: ${{ github.ref_name }}
