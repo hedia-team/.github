@@ -41,8 +41,11 @@ jobs:
 
             - name: Deploy to Scalingo
               run: |
-                  ls
-                  for app in ${${{ inputs.apps }}//,/ }
+                  for app in ${APPS//,/}
                   do
-                    scalingo --app $app deploy ${{ github.event.repository.name }}-${{ inputs.version || github.ref_name }}.tar.gz
+                    scalingo --app $app deploy "${REPO}-${VERSION:1}.tar.gz"
                   done
+              env:
+                  APPS: ${{ inputs.apps }}
+                  REPO: ${{ github.event.repository.name }}
+                  VERSION: ${{ inputs.version || github.ref_name }}
