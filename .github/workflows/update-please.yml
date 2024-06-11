@@ -60,7 +60,9 @@ jobs:
                   title: "chore(deps): update dependencies"
 
             - name: Log
-              run: echo ${{ steps.create-pull-request.outputs }}
+              run: echo ${{ steps.create-pull-request.outputs.pull-number }}
+              env:
+                  LOL: ${{ steps.create-pull-request.outputs }}
 
             - name: Assign Actor
               uses: actions/github-script@v7

@@ -84,7 +84,6 @@ runs:
                   });
 
                   if (pullRequests.length !== 0) {
-                    console.log( "EHRE", pullRequests[0].number);
                     return { pull_number: pullRequests[0].number };
                   }
 
