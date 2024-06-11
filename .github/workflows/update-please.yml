@@ -60,6 +60,6 @@ jobs:
                   title: "chore(deps): update dependencies"
 
             - name: Assign Actor
-              run: gh pr edit --add-assignee ${{ github.actor || 'hedia-bot' }}
+              run: gh pr edit --add-assignee ${{ github.event_name == 'workflow_dispatch' && github.actor || 'hedia-bot' }}
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
