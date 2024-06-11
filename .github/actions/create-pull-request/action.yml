@@ -113,7 +113,7 @@ runs:
         - if: steps.git-status.outputs.changes == 'true' && inputs.auto-merge
           name: Enable Auto-Merge
           shell: bash
-          run: gh pr merge $PULL_NUMBER --auto --squash
+          run: gh pr merge --auto --squash
           env:
               GH_TOKEN: ${{ inputs.github-token }}
               PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
