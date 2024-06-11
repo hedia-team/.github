@@ -41,6 +41,7 @@ jobs:
 
             - name: Deploy to Scalingo
               run: |
+                  ls
                   for app in ${${{ inputs.apps }}//,/ }
                   do
                     scalingo --app $app deploy ${{ github.event.repository.name }}-${{ inputs.version || github.ref_name }}.tar.gz
