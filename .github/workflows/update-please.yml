@@ -58,3 +58,18 @@ jobs:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   head: "update-please-${{ github.sha }}"
                   title: "chore(deps): update dependencies"
+
+            - name: Assign Actor
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
+                      console.dir(JSON.parse("${{ steps.create-pull-request.outputs }}"), { depth: 100 });
+                      const issue_number = Number("${{ steps.create-pull-request.outputs.pull-number }}");
+                      const assignees = ["${{ github.actor }}"];
+
+                      console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
+
+                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
