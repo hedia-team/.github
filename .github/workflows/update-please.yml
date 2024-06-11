@@ -59,8 +59,7 @@ jobs:
                   head: "update-please-${{ github.sha }}"
                   title: "chore(deps): update dependencies"
 
-            - if: github.actor != null
-              name: Assign Actor
-              run: gh pr edit --add-assignee ${{ github.actor }}
+            - name: Assign Actor
+              run: gh pr edit --add-assignee ${{ github.actor || 'hedia-bot' }}
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
