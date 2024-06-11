@@ -1,0 +1,109 @@
+name: Create Pull Request
+description: If there are no changes, the action will exit silently.
+
+inputs:
+    github-token:
+        description: The GitHub token to use.
+        required: true
+    base:
+        description: The branch to create the PR against. Default to repository's default branch.
+        required: false
+    head:
+        description: The branch to create the PR from.
+        required: true
+    title:
+        description: The title of the PR.
+        required: true
+    body:
+        description: The body of the PR.
+        required: false
+    commit:
+        description: The commit message. If not provided, the title will be used.
+        required: false
+    force:
+        description: Whether to force push the branch. Default to false.
+        required: false
+    auto-merge:
+        description: Whether to enable auto-merge. Default to false.
+        required: false
+    draft:
+        description: Whether to create the PR as a draft. Default to false.
+        required: false
+
+runs:
+    using: "composite"
+    steps:
+        - id: git-status
+          name: Git Status
+          shell: bash
+          run: "[[ -n $(git status --porcelain) ]] && echo 'changes=true' >> $GITHUB_OUTPUT || echo 'changes=false' >> $GITHUB_OUTPUT"
+
+        - if: steps.git-status.outputs.changes == 'true'
+          name: Git Config
+          shell: bash
+          run: |
+              [ -n $ACTOR ] && git config user.email "${ACTOR_ID}+${ACTOR}@users.noreply.github.com" || git config user.email 74369034+hedia-bot@users.noreply.github.com
+              [ -n $ACTOR ] && git config user.name $ACTOR || git config user.name hedia-bot
+          env:
+              ACTOR_ID: ${{ github.actor_id }}
+              ACTOR: ${{ github.actor }}
+
+        - if: steps.git-status.outputs.changes == 'true'
+          name: Commit Changes
+          shell: bash
+          run: |
+              git checkout -b $HEAD
+              git add .
+              [ -n $COMMIT ] && git commit -m "$COMMIT" || git commit -m "$TITLE"
+              [ -n $FORCE ] && git push -f -u origin $HEAD || git push -u origin $HEAD
+          env:
+              COMMIT: ${{ inputs.commit }}
+              FORCE: ${{ inputs.force }}
+              HEAD: ${{ inputs.head }}
+              TITLE: ${{ inputs.title }}
+
+        - if: steps.git-status.outputs.changes == 'true'
+          id: create-pull-request
+          name: Create Pull Request
+          uses: actions/github-script@v7
+          with:
+              github-token: ${{ inputs.github-token }}
+              script: |
+                  const { BASE, BODY, DEFAULT_BRANCH, DRAFT, HEAD, OWNER, REPO, TITLE } = process.env;
+
+                  const { data: pullRequests } = await github.rest.pulls.list({
+                    owner: OWNER,
+                    repo: REPO,
+                    base: BASE ?? DEFAULT_BRANCH,
+                    head: HEAD
+                  });
+
+                  if (pullRequests.length === 0) {
+                    const { data: pullRequest } = await github.rest.pulls.create({
+                        owner: OWNER,
+                        repo: REPO,
+                        base: BASE ?? DEFAULT_BRANCH,
+                        head: HEAD,
+                        title: TITLE,
+                        body: BODY ?? null,
+                        draft: DRAFT ? true : false
+                    });
+
+                    console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
+                  }
+          env:
+              BASE: ${{ inputs.base }}
+              BODY: ${{ inputs.body }}
+              DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+              DRAFT: ${{ inputs.draft }}
+              HEAD: ${{ inputs.head }}
+              OWNER: ${{ github.repository_owner }}
+              REPO: ${{ github.event.repository.name }}
+              TITLE: ${{ inputs.title }}
+
+        - if: steps.git-status.outputs.changes == 'true' && inputs.auto-merge
+          name: Enable Auto-Merge
+          shell: bash
+          run: gh pr merge --auto --squash
+          env:
+              GH_TOKEN: ${{ inputs.github-token }}

@@ -1,0 +1,79 @@
+name: Pull Request
+
+on:
+    pull_request:
+        types:
+            - edited
+            - opened
+            - ready_for_review
+            - reopened
+
+    workflow_call:
+        inputs:
+            reviewers:
+                type: string
+                description: A comma-separated list of reviewers (GitHub usernames) to request a review from.
+                required: false
+            team-reviewers:
+                type: string
+                description: A comma-separated list of GitHub teams to request a review from.
+                required: false
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to link project
+                required: true
+
+jobs:
+    pull-request:
+        runs-on: ubuntu-latest
+        steps:
+            - id: link-project
+              name: Link Project
+              uses: actions/add-to-project@releases/v1
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  project-url: https://github.com/orgs/hedia-team/projects/2
+
+            - name: Move to In Progress
+              run: gh project item-edit --id ${{ steps.link-project.outputs.itemId }} --project-id PVT_kwDOAbxhxs4AMUvg --field-id PVTSSF_lADOAbxhxs4AMUvgzgH3I2s --single-select-option-id 47fc9ee4
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+
+            - if: github.event.pull_request.assignees[0] == null
+              name: Assign Actor
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
+                      const issue_number = ${{ github.event.pull_request.number }};
+                      const assignees = ["${{ github.actor }}"];
+
+                      console.log(`@${owner}/${repo}#${issue_number}: Assigning to ${assignees}`);
+
+                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
+
+            - if: >
+                  github.event.pull_request.draft == false &&
+                  github.event.pull_request.requested_reviewers[0] == null &&
+                  github.event.pull_request.requested_teams[0] == null
+              name: Request Reviewers
+              uses: actions/github-script@v7
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  script: |
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
+                      const pull_number = ${{ github.event.pull_request.number }};
+                      const reviewers = "${{ github.event.inputs.reviewers || inputs.reviewers }}".split(',').filter((reviewer) => reviewer);
+                      const team_reviewers = "${{ github.event.inputs.team-reviewers || inputs.team-reviewers }}".split(',').filter((reviewer) => reviewer);
+
+                      console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
+
+                      await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
+
+            - name: Set Labels
+              uses: hedia-team/.github/.github/actions/set-labels@main
+              with:
+                  github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
