@@ -56,7 +56,7 @@ jobs:
                   body: "Update Please has found one or more dependencies to be updated! 🚀"
                   force: true
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  head: "update-please-${{ github.sha }}"
+                  head: "update-please-${{ github.ref_name }}"
                   title: "chore(deps): update dependencies"
 
             - name: Assign Actor
