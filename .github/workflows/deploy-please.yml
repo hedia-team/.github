@@ -1,0 +1,44 @@
+name: Deploy Please
+
+on:
+    workflow_call:
+        inputs:
+            apps:
+                type: string
+                description: A comma-separated list of Scalingo apps to deploy. For example, "hedia-com-foo,hedia-dev-foo".
+                required: true
+            version:
+                type: string
+                description: The tag version to deploy. For example, "v1.0.0". If not provided, the release that triggered the workflow will be used.
+                required: false
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to deploy to Scalingo
+                required: true
+            SCALINGO_TOKEN:
+                description: Needed to deploy to Scalingo
+                required: true
+
+jobs:
+    deploy-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Download the Release
+              run: gh release download ${{ inputs.version || github.ref_name }} --archive=tar.gz
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+
+            - name: Setup Scalingo CLI
+              run: |
+                  curl -O https://cli-dl.scalingo.com/install &&
+                  bash install &&
+                  scalingo login --api-token ${{ secrets.SCALINGO_TOKEN }}
+
+            - name: Deploy to Scalingo
+              run: |
+                  for app in ${${{ inputs.apps }}//,/ }
+                  do
+                    scalingo --app $app deploy ${{ github.repository.name }}-${{ inputs.version || github.ref_name }}.tar.gz
+                  done
