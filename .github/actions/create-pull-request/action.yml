@@ -30,11 +30,6 @@ inputs:
         description: Whether to create the PR as a draft. Default to false.
         required: false
 
-outputs:
-    pull-number:
-        description: The number of the PR that was created or updated if any.
-        value: ${{ steps.set-output.outputs.pull-number }}
-
 runs:
     using: "composite"
     steps:
@@ -83,23 +78,19 @@ runs:
                     head: HEAD
                   });
 
-                  if (pullRequests.length !== 0) {
-                    return { pull_number: pullRequests[0].number };
+                  if (pullRequests.length === 0) {
+                    const { data: pullRequest } = await github.rest.pulls.create({
+                        owner: OWNER,
+                        repo: REPO,
+                        base: BASE ?? DEFAULT_BRANCH,
+                        head: HEAD,
+                        title: TITLE,
+                        body: BODY ?? null,
+                        draft: DRAFT ? true : false
+                    });
+
+                    console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
                   }
-
-                  const { data: pullRequest } = await github.rest.pulls.create({
-                    owner: OWNER,
-                    repo: REPO,
-                    base: BASE ?? DEFAULT_BRANCH,
-                    head: HEAD,
-                    title: TITLE,
-                    body: BODY ?? null,
-                    draft: DRAFT ? true : false
-                  });
-
-                  console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
-
-                  return { pull_number: pullRequest.number };
           env:
               BASE: ${{ inputs.base }}
               BODY: ${{ inputs.body }}
@@ -116,12 +107,3 @@ runs:
           run: gh pr merge --auto --squash
           env:
               GH_TOKEN: ${{ inputs.github-token }}
-              PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
-
-        - if: steps.git-status.outputs.changes == 'true'
-          id: set-output
-          name: Set Output
-          shell: bash
-          run: echo "pull-number=$PULL_NUMBER" >> "$GITHUB_OUTPUT"
-          env:
-              PULL_NUMBER: ${{ steps.create-pull-request.outputs.result.pull_number }}
