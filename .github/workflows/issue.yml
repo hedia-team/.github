@@ -16,6 +16,7 @@ on:
 jobs:
     issue:
         runs-on: ubuntu-latest
+        timeout-minutes: 1
         steps:
             - name: Link Project
               uses: actions/add-to-project@releases/v1
