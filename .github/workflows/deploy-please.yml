@@ -25,6 +25,9 @@ jobs:
         timeout-minutes: 10
 
         steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
             - name: Download the Release
               run: gh release download ${{ inputs.version || github.ref_name }} --archive=tar.gz
               env:
