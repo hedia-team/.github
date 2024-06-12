@@ -18,6 +18,7 @@ on:
                 type: string
                 description: A comma-separated list of GitHub teams to request a review from.
                 required: false
+
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to link project
@@ -26,6 +27,7 @@ on:
 jobs:
     pull-request:
         runs-on: ubuntu-latest
+        timeout-minutes: 1
         steps:
             - id: link-project
               name: Link Project

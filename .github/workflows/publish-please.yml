@@ -7,6 +7,7 @@ on:
                 description: The git ref to publish
                 type: string
                 required: true
+
         secrets:
             READONLY_NPM_TOKEN:
                 description: Needed to install private @hedia npm packages
@@ -18,14 +19,12 @@ on:
 jobs:
     publish-please:
         runs-on: ubuntu-latest
-        timeout-minutes: 10
-
+        timeout-minutes: 5
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
               with:
                   ref: ${{ inputs.github_ref }}
-                  fetch-depth: 1
 
             - name: Setup Node.js Environment
               uses: actions/setup-node@v4

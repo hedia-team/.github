@@ -12,6 +12,7 @@ on:
                 description: The tag to use for the Docker image
                 required: false
                 default: latest
+
         secrets:
             READONLY_NPM_TOKEN:
                 description: Needed to install private @hedia npm packages
@@ -28,12 +29,12 @@ permissions:
 jobs:
     dockerize-please:
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - name: Check out code
               uses: actions/checkout@v4
               with:
                   ref: ${{ inputs.github_ref || inputs.tag_name }}
-                  fetch-depth: 1
 
             - name: Create .npmrc
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.READONLY_NPM_TOKEN }}" > .npmrc

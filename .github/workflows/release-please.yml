@@ -9,6 +9,7 @@ on:
             tag_name:
                 description: "The tag name (version number) of the release created"
                 value: ${{ jobs.release-please.outputs.tag_name }}
+
         secrets:
             HEDIA_BOT_GITHUB_PAT:
                 description: Needed to run release-please
@@ -21,6 +22,7 @@ permissions:
 jobs:
     release-please:
         runs-on: ubuntu-latest
+        timeout-minutes: 5
         if: >
             github.event_name == 'workflow_dispatch' ||
             (
