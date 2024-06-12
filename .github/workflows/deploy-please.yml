@@ -42,7 +42,7 @@ jobs:
 
             - name: Deploy to Scalingo
               run: |
-                  for app in ${APPS//,/}
+                  for app in ${APPS//,/ }
                   do
                     scalingo --app $app deploy --no-follow "${REPO}-${VERSION:1}.tar.gz" $VERSION
                   done
