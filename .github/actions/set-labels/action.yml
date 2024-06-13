@@ -46,6 +46,10 @@ runs:
                       labels.push("patch");
                   }
 
+                  if (TITLE.startsWith("chore(main): release")) {
+                      labels.push("autorelease: pending");
+                  }
+
                   console.log(`@${OWNER}/${REPO}#${NUMBER}: Setting labels to ${labels}`);
 
                   await github.rest.issues.setLabels({
