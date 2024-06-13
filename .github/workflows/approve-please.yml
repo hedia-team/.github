@@ -1,0 +1,67 @@
+name: Approve Please
+
+on:
+    workflow_dispatch:
+        inputs:
+            assignee:
+                type: choice
+                description: PR must be created by and assigned to
+                required: true
+                options:
+                    - hedia-bot
+                    - hedia-bot-limited
+            team-reviewer:
+                type: choice
+                description: PR must be reviewed by
+                required: true
+                options:
+                    - backend
+                    - bots
+                    - development
+            label:
+                type: choice
+                description: PR must have label
+                required: true
+                default: chore
+                options:
+                    - build
+                    - chore
+                    - ci
+                    - docs
+                    - style
+                    - test
+            title:
+                type: choice
+                description: PR title must match
+                required: true
+                options:
+                    - "chore(deps): update dependencies"
+            approval:
+                type: boolean
+                description: I hereby approve the PRs
+                required: true
+                default: false
+
+jobs:
+    approve-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - if: inputs.approval == false
+              name: Check approval
+              run: echo "Approval required" && exit 1
+
+            - name: Search & Approve PRs
+              run: |
+                  body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
+                  urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}")
+
+                  echo "Found $(echo $urls | wc -l) PRs to approve!"
+
+                  for url in ${urls//,/ }
+                  do
+                    echo "Approving PR: $url"
+                    gh pr review --approve --body $body $url
+                  done
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
