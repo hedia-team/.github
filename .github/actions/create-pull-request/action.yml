@@ -29,6 +29,9 @@ inputs:
     draft:
         description: Whether to create the PR as a draft. Default to false.
         required: false
+    assignee:
+        description: The assignee of the PR.
+        required: false
 
 runs:
     using: "composite"
@@ -106,4 +109,12 @@ runs:
           shell: bash
           run: gh pr merge --auto --squash
           env:
+              GH_TOKEN: ${{ inputs.github-token }}
+
+        - if: steps.git-status.outputs.changes == 'true' && inputs.assignee
+          name: Add Assignee
+          shell: bash
+          run: gh pr edit --add-assignee $ASSIGNEE
+          env:
+              ASSIGNEE: ${{ inputs.assignee }}
               GH_TOKEN: ${{ inputs.github-token }}
