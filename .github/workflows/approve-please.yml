@@ -62,7 +62,7 @@ jobs:
                   for url in ${urls//,/ }
                   do
                     echo "> $url"
-                    ${{ inputs.approval && 'gh pr review --approve --body "$body" $url' }}
+                    ${{ inputs.approval && 'gh pr review --approve --body "$body" $url' || '' }}
                   done
               env:
                   GH_TOKEN: ${{ inputs.assignee == 'hedia-bot' && secrets.HEDIA_BOT_LIMITED_GITHUB_PAT || secrets.HEDIA_BOT_GITHUB_PAT }}
