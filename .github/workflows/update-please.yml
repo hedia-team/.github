@@ -109,5 +109,9 @@ jobs:
                     echo "* $url"
                     gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
                   done
+
+                  echo " "
+                  echo "Feel free to approve the PRs created by update-please once the checks have passed using approve-please!"
+                  echo "https://github.com/hedia-team/.github/actions/workflows/approve-please.yml"
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
