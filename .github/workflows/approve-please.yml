@@ -69,9 +69,11 @@ jobs:
                     pending_checks=$(gh pr view $url --json statusCheckRollup --jq '.statusCheckRollup[].conclusion' | grep -v 'SUCCESS')
                     
                     if [ -z "$pending_checks" ]; then
-                      ${{ inputs.action == 'Approve PRs' && 'gh pr review --approve --body "$body" $url' || '' }}
+                      if [ "${{ inputs.action }}" == "Approve PRs" ]; then
+                        gh pr review --approve --body "$body" $url
+                      fi
                     else
-                      echo "Not all checks have completey successfully for PR $url"
+                      echo "Not all checks have completed successfully for PR $url"
                     fi
                   done
               env:
