@@ -52,29 +52,64 @@ jobs:
         steps:
             - name: ${{ inputs.action }}
               run: |
-                  urls=$(gh search prs --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
+                  urls=$(gh search prs --limit 100 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
 
                   if [ -z "$urls" ]; then
-                    echo "No PRs found" && exit 0
+                    echo "No PRs found." && exit 0
                   fi
 
-                  ${{ inputs.action == 'Approve PRs' && 'echo "Approving $(echo "$urls" | wc -l) PRs:"' || 'echo "Found $(echo "$urls" | wc -l) PRs:"' }}
+                  echo "Found $(echo "$urls" | wc -l) potential PRs"
+                  echo
+                  echo "Validating PRs for check status ..."
 
-                  body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
+                  actionable_urls=()
+                  inactionable_urls=()
 
-                  for url in ${urls//,/ }
+                  for url in $urls
                   do
-                    echo "> $url"
-
+                    echo "Checking $url for check status ..."
                     pending_checks=$(gh pr view $url --json statusCheckRollup --jq '.statusCheckRollup[].conclusion' | grep -v 'SUCCESS')
-                    
+
                     if [ -z "$pending_checks" ]; then
-                      if [ "${{ inputs.action }}" == "Approve PRs" ]; then
-                        gh pr review --approve --body "$body" $url
-                      fi
+                      actionable_urls+=($url)
                     else
-                      echo "Not all checks have completed successfully for PR $url"
+                      inactionable_urls+=($url)
                     fi
                   done
+
+                  if [ ${#actionable_urls[@]} -eq 0 ]; then
+                    echo
+                    echo "No PRs can be approved."
+                  else
+                    echo
+                    echo "Number of PRs that can be approved: ${#actionable_urls[@]}"
+
+                    for url in "${actionable_urls[@]}"
+                    do
+                      echo "* $url"
+                    done
+
+                    if [ "${{ inputs.action }}" == "Approve PRs" ]; then
+                      echo
+                      echo "Approving PRs ..."
+
+                      body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
+                      for url in "${actionable_urls[@]}"
+                      do
+                        gh pr review --approve --body "$body" $url
+                        echo "Approved $url"
+                      done
+                    fi
+                  fi
+
+                  if [ ${#inactionable_urls[@]} -ne 0 ]; then
+                    echo
+                    echo "Number of PRs that cannot be approved: ${#inactionable_urls[@]}"
+
+                    for url in "${inactionable_urls[@]}"
+                    do
+                      echo "* $url"
+                    done
+                  fi
               env:
                   GH_TOKEN: ${{ inputs.assignee == 'hedia-bot' && secrets.HEDIA_BOT_LIMITED_GITHUB_PAT || secrets.HEDIA_BOT_GITHUB_PAT }}
