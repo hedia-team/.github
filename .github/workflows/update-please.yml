@@ -102,11 +102,12 @@ jobs:
               run: |
                   urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
 
+                  echo "Running Update Please for the following repos:"
+
                   for url in $urls
                   do
-                    echo "Running Update Please for repos $url"
+                    echo "* $url"
                     gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
-                    echo " "
                   done
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
