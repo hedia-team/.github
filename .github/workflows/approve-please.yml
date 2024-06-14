@@ -65,15 +65,17 @@ jobs:
                   actionable_urls=()
                   inactionable_urls=()
 
-                  for url in ${urls//,/ }
+                  for url in $urls
                   do
                     echo "Checking $url for check status ..."
                     pending_checks=$(gh pr view $url --json statusCheckRollup --jq '.statusCheckRollup[].conclusion' | grep -v 'SUCCESS')
 
                     if [ -z "$pending_checks" ]; then
                       actionable_urls+=($url)
+                      echo "i added $url to actionable_urls"
                     else
                       inactionable_urls+=($url)
+                      echo "i added $url to inactionable_urls"
                     fi
                   done
 
