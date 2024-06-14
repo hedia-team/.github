@@ -51,7 +51,7 @@ jobs:
               run: |
                   urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
 
-                  if [ -z $urls ]; then
+                  if [ -z "$urls" ]; then
                     echo "No PRs found" && exit 0
                   fi
 
