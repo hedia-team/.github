@@ -16,6 +16,29 @@ on:
                 description: Needed to access private @hedia npm packages
                 required: true
 
+    workflow_dispatch:
+        inputs:
+            topic:
+                type: choice
+                description: Repositories tagged with this topic will be updated
+                required: true
+                default: backend
+                options:
+                    - app
+                    - backend
+                    - dev
+                    - io
+                    - module
+                    - org
+                    - platform
+                    - runtime
+                    - service
+                    - test
+            target:
+                type: string
+                description: Target versions to upgrade to. For example, "latest", "minor" or "patch".
+                default: minor
+
 permissions:
     contents: write
     pull-requests: write
@@ -24,6 +47,7 @@ jobs:
     update-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
+        if: github.event.repository.name != '.github'
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
@@ -62,5 +86,23 @@ jobs:
 
             - name: Assign Actor
               run: gh pr edit --add-assignee ${{ github.event_name == 'workflow_dispatch' && github.actor || 'hedia-bot' }}
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+
+    run-update-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        if: github.event.repository.name == '.github'
+        steps:
+            - name: Run Update Please
+              run: |
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+
+                  for url in $urls
+                  do
+                    echo "Running Update Please for repos $url"
+                    gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
+                    echo " "
+                  done
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
