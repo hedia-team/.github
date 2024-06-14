@@ -52,7 +52,7 @@ jobs:
         steps:
             - name: ${{ inputs.action }}
               run: |
-                  urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
+                  urls=$(gh search prs --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
 
                   if [ -z "$urls" ]; then
                     echo "No PRs found" && exit 0
@@ -65,7 +65,14 @@ jobs:
                   for url in ${urls//,/ }
                   do
                     echo "> $url"
-                    ${{ inputs.action == 'Approve PRs' && 'gh pr review --approve --body "$body" $url' || '' }}
+
+                    pending_checks=$(gh pr view $url --json statusCheckRollup --jq '.statusCheckRollup[].conclusion' | grep -v 'SUCCESS')
+                    
+                    if [ -z "$pending_checks" ]; then
+                      ${{ inputs.action == 'Approve PRs' && 'gh pr review --approve --body "$body" $url' || '' }}
+                    else
+                      echo "Not all checks have completey successfully for PR $url"
+                    fi
                   done
               env:
                   GH_TOKEN: ${{ inputs.assignee == 'hedia-bot' && secrets.HEDIA_BOT_LIMITED_GITHUB_PAT || secrets.HEDIA_BOT_GITHUB_PAT }}
