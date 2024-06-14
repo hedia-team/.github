@@ -59,4 +59,4 @@ jobs:
                     ${{ inputs.approval && 'echo $url && gh pr review --approve --body $body $url' || 'echo $url' }}
                   done
               env:
-                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  GH_TOKEN: ${{ github.token }}
