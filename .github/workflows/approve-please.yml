@@ -36,18 +36,21 @@ on:
                 required: true
                 options:
                     - "chore(deps): update dependencies"
-            approval:
-                type: boolean
-                description: I hereby approve the PRs
+            action:
+                type: choice
+                description: Action to perform
                 required: true
-                default: false
+                default: Search PRs
+                options:
+                    - Approve PRs
+                    - Search PRs
 
 jobs:
     approve-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
-            - name: ${{ inputs.approval && 'Approve PRs' || 'Search PRs' }}
+            - name: ${{ inputs.action }}
               run: |
                   urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
 
@@ -55,14 +58,14 @@ jobs:
                     echo "No PRs found" && exit 0
                   fi
 
-                  ${{ inputs.approval && 'echo "Approving $(echo "$urls" | wc -l) PRs:"' || 'echo "Found $(echo "$urls" | wc -l) PRs:"' }}
+                  ${{ inputs.action == 'Approve PRs' && 'echo "Approving $(echo "$urls" | wc -l) PRs:"' || 'echo "Found $(echo "$urls" | wc -l) PRs:"' }}
 
                   body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
 
                   for url in ${urls//,/ }
                   do
                     echo "> $url"
-                    ${{ inputs.approval && 'gh pr review --approve --body "$body" $url' || '' }}
+                    ${{ inputs.action == 'Approve PRs' && 'gh pr review --approve --body "$body" $url' || '' }}
                   done
               env:
                   GH_TOKEN: ${{ inputs.assignee == 'hedia-bot' && secrets.HEDIA_BOT_LIMITED_GITHUB_PAT || secrets.HEDIA_BOT_GITHUB_PAT }}
