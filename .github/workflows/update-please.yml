@@ -20,7 +20,7 @@ on:
         inputs:
             topic:
                 type: choice
-                description: Repositories tagged with this topic will be updated
+                description: Target repositories with topic
                 required: true
                 default: backend
                 options:
