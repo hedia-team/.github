@@ -49,10 +49,11 @@ jobs:
         steps:
             - name: ${{ inputs.approval && 'Approve PRs' || 'Search PRs' }}
               run: |
-                  body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
-                  urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}")
+                  urls=$(gh search prs --checks success --limit 1000 --owner hedia-team --review none --state open --author ${{ inputs.assignee }} --assignee ${{ inputs.assignee }} --review-requested hedia-team/${{ inputs.team-reviewer }} --label ${{ inputs.label }} --match title "${{ inputs.title }}" --json url --jq '.[] | .url')
 
-                  ${{ inputs.approval && 'echo "Approving $(echo $urls | wc -l) PRs:"' || 'echo "Found $(echo $urls | wc -l) PRs:"' }}
+                  ${{ inputs.approval && 'echo "Approving $(echo $urls | wc -l) PRs"' || 'echo "Found $(echo $urls | wc -l) PRs"' }}
+
+                  body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
 
                   for url in ${urls//,/ }
                   do
