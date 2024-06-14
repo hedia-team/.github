@@ -68,7 +68,7 @@ jobs:
                   for url in $urls
                   do
                     echo "Checking $url for check status ..."
-                    pending_checks=$(gh pr view $url --json statusCheckRollup --jq '.statusCheckRollup[].conclusion' | grep -v 'SUCCESS' || true)
+                    pending_checks=$(gh pr checks $url --json state --jq '.[].state' | grep -v 'SUCCESS' | grep -v 'SKIPPED' || true)
 
                     if [ -z "$pending_checks" ]; then
                       actionable_urls+=($url)
