@@ -59,7 +59,7 @@ jobs:
                   fi
 
                   echo "Found $(echo "$urls" | wc -l) potential PRs"
-                  echo
+                  echo " "
                   echo "Validating PRs for check status ..."
 
                   actionable_urls=()
@@ -72,18 +72,16 @@ jobs:
 
                     if [ -z "$pending_checks" ]; then
                       actionable_urls+=($url)
-                      echo "i added $url to actionable_urls"
                     else
                       inactionable_urls+=($url)
-                      echo "i added $url to inactionable_urls"
                     fi
                   done
 
                   if [ ${#actionable_urls[@]} -eq 0 ]; then
-                    echo
+                    echo " "
                     echo "No PRs can be approved."
                   else
-                    echo
+                    echo " "
                     echo "Number of PRs that can be approved: ${#actionable_urls[@]}"
 
                     for url in "${actionable_urls[@]}"
@@ -92,7 +90,7 @@ jobs:
                     done
 
                     if [ "${{ inputs.action }}" == "Approve PRs" ]; then
-                      echo
+                      echo " "
                       echo "Approving PRs ..."
 
                       body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
@@ -105,7 +103,7 @@ jobs:
                   fi
 
                   if [ ${#inactionable_urls[@]} -ne 0 ]; then
-                    echo
+                    echo " "
                     echo "Number of PRs that cannot be approved: ${#inactionable_urls[@]}"
 
                     for url in "${inactionable_urls[@]}"
