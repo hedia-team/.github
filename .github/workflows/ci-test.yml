@@ -45,7 +45,7 @@ jobs:
                     --health-retries 5
                 ports:
                     - 5432:5432
-            rabbit:
+            rabbitmq:
                 image: ${{ inputs.rabbitmq && 'rabbitmq' || '' }}
                 options: >-
                     --health-cmd "rabbitmq-diagnostics -q ping"
