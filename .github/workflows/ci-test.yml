@@ -7,6 +7,11 @@ on:
                 description: Database used in this workflow. Default to none
                 required: false
                 type: string
+            rabbitmq:
+                description: Whether or not to use RabbitMQ in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
             redis:
                 description: Whether or not to use Redis in this workflow. Default to false
                 required: false
@@ -40,7 +45,15 @@ jobs:
                     --health-retries 5
                 ports:
                     - 5432:5432
-
+            rabbitmq:
+                image: ${{ inputs.rabbitmq && 'rabbitmq' || '' }}
+                options: >-
+                    --health-cmd "rabbitmq-diagnostics -q ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5672:5672
             redis:
                 image: ${{ inputs.redis && 'redis' || '' }}
                 options: >-
