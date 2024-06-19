@@ -76,6 +76,11 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
+            - name: Audit dependencies
+              run: npm audit fix ${{ inputs.target == 'latest' && '--force' || ''}}
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
             - id: create-pull-request
               name: Create Pull Request
               uses: hedia-team/.github/.github/actions/create-pull-request@main
