@@ -38,6 +38,7 @@ on:
                 type: choice
                 description: Target versions to upgrade to
                 required: true
+                default: minor
                 options:
                     - latest
                     - minor
