@@ -35,7 +35,7 @@ jobs:
             - name: Create Issues
               run: |
                   footer=":technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
-                  body=$([ -n "${{ inputs.body }}" ] && echo -e "${{ inputs.body }}\n\n------------------------------------------\n$footer" > body.txt; cat body.txt || echo $footer)
+                  body=$([ -n "${{ inputs.body }}" ] && echo -e "${{ inputs.body }}\n\n---\n$footer" > body.txt; cat body.txt || echo $footer)
 
                   echo "Creating the following issues:"
                   echo " "
