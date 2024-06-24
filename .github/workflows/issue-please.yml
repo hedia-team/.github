@@ -42,7 +42,7 @@ jobs:
                   for url in $urls
                   do
                     echo "* $url"
-                    gh issue create --title "${{ inputs.title }}" --body "${{ inputs.body }}\n:technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
+                    gh issue create --title "${{ inputs.title }}" --body "${{ inputs.body }}\n\n:technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
                   done
 
                   echo " "
