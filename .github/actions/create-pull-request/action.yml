@@ -81,7 +81,9 @@ runs:
                     head: HEAD
                   });
 
-                  if (pullRequests.length === 0) {
+                  const hasOpenedPR = pullRequests.reduce((hasOpenedPR, pullRequest) => hasOpenedPR || pullRequest.state === "open", false);
+
+                  if (!hasOpenedPR) {
                     const { data: pullRequest } = await github.rest.pulls.create({
                         owner: OWNER,
                         repo: REPO,
