@@ -35,13 +35,17 @@ jobs:
         steps:
             - name: Create Issues
               run: |
-                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+                  footer=":technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
+                  body=$([ -n "${{ inputs.body }}" ] && echo -e "${{ inputs.body }}\n\n$footer" > body.txt; cat body.txt || echo $footer)
 
-                  echo "Running Issue Please for the following repos:"
+                  echo "Creating the following issues:"
+                  echo " "
+
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
 
                   for url in $urls
                   do
-                    gh issue create --repo $url --title "${{ inputs.title }}" --body "${{ inputs.body }}" --body=":technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
+                    gh issue create --repo $url --title "${{ inputs.title }}" --body "$body"
                   done
 
                   echo " "
