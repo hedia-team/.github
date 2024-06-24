@@ -7,7 +7,6 @@ on:
                 type: choice
                 description: Target repositories with topic
                 required: true
-                default: backend
                 options:
                     - app
                     - backend
