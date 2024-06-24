@@ -1,0 +1,51 @@
+name: Issue Please
+
+on:
+    workflow_dispatch:
+        inputs:
+            topic:
+                type: choice
+                description: Target repositories with topic
+                required: true
+                default: backend
+                options:
+                    - app
+                    - backend
+                    - dev
+                    - io
+                    - module
+                    - org
+                    - platform
+                    - runtime
+                    - service
+                    - test
+            title:
+                type: string
+                description: The title of the issue
+                required: true
+            body:
+                type: string
+                description: The body of the issue
+                required: false
+
+jobs:
+    issue-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Create Issues
+              run: |
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+
+                  echo "Running Issue Please for the following repos:"
+
+                  for url in $urls
+                  do
+                    echo "* $url"
+                    gh issue create --title "${{ inputs.title }}" --body "${{ inputs.body }}\n:technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
+                  done
+
+                  echo " "
+                  echo "Well done! You seem to have a lot on your plate now... Let's get to work!"
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
