@@ -1,4 +1,4 @@
-name: Issue Please
+name: Issues Please
 
 on:
     workflow_dispatch:
@@ -7,7 +7,6 @@ on:
                 type: choice
                 description: Target repositories with topic
                 required: true
-                default: backend
                 options:
                     - app
                     - backend
@@ -21,28 +20,31 @@ on:
                     - test
             title:
                 type: string
-                description: The title of the issue
+                description: The title of the issues
                 required: true
             body:
                 type: string
-                description: The body of the issue
+                description: The body of the issues
                 required: false
 
 jobs:
-    issue-please:
+    issues-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
             - name: Create Issues
               run: |
-                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+                  footer=":technologist: @${{ github.actor }} created this issue using <a href=\"https://github.com/hedia-team/.github/actions/workflows/issue-please.yml\">issue-please</a> :robot:"
+                  body=$([ -n "${{ inputs.body }}" ] && echo "${{ inputs.body }}<hr>$footer" || echo "$footer")
 
-                  echo "Running Issue Please for the following repos:"
+                  echo "Creating the following issues:"
+                  echo " "
+
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
 
                   for url in $urls
                   do
-                    echo "* $url"
-                    gh issue create --title "${{ inputs.title }}" --body "${{ inputs.body }}\n\n:technologist: @${{ github.actor }} created this issue using [issue-please](https://github.com/hedia-team/.github/actions/workflows/issue-please.yml) :robot:"
+                    gh issue create --repo $url --title "${{ inputs.title }}" --body "$body"
                   done
 
                   echo " "
