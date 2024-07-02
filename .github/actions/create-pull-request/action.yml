@@ -46,7 +46,7 @@ runs:
           shell: bash
           run: |
               [ -n "$ACTOR" ] && git config user.email "${ACTOR_ID}+${ACTOR}@users.noreply.github.com" || git config user.email 74369034+hedia-bot@users.noreply.github.com
-              [ -n "$ACTOR" ] && git config user.name $ACTOR || git config user.name hedia-bot
+              [ -n "$ACTOR" ] && git config user.name "$ACTOR" || git config user.name hedia-bot
           env:
               ACTOR_ID: ${{ github.actor_id }}
               ACTOR: ${{ github.actor }}
@@ -55,7 +55,7 @@ runs:
           name: Commit Changes
           shell: bash
           run: |
-              git checkout -b $HEAD
+              git checkout -b "$HEAD"
               git add .
               [ -n "$COMMIT" ] && git commit -m "$COMMIT" || git commit -m "$TITLE"
               [ -n "$FORCE" ] && git push -f -u origin $HEAD || git push -u origin $HEAD
@@ -74,28 +74,17 @@ runs:
               script: |
                   const { BASE, BODY, DEFAULT_BRANCH, DRAFT, HEAD, OWNER, REPO, TITLE } = process.env;
 
-                  const { data: pullRequests } = await github.rest.pulls.list({
-                    owner: OWNER,
-                    repo: REPO,
-                    base: BASE ?? DEFAULT_BRANCH,
-                    head: HEAD
+                  const { data: pullRequest } = await github.rest.pulls.create({
+                      owner: OWNER,
+                      repo: REPO,
+                      base: BASE ?? DEFAULT_BRANCH,
+                      head: HEAD,
+                      title: TITLE,
+                      body: BODY ?? null,
+                      draft: DRAFT ? true : false
                   });
 
-                  const hasOpenedPR = pullRequests.reduce((hasOpenedPR, pullRequest) => hasOpenedPR || pullRequest.state === "open", false);
-
-                  if (!hasOpenedPR) {
-                    const { data: pullRequest } = await github.rest.pulls.create({
-                        owner: OWNER,
-                        repo: REPO,
-                        base: BASE ?? DEFAULT_BRANCH,
-                        head: HEAD,
-                        title: TITLE,
-                        body: BODY ?? null,
-                        draft: DRAFT ? true : false
-                    });
-
-                    console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
-                  }
+                  console.log(`@${OWNER}/${REPO}#${pullRequest.number}: PR Created`);
           env:
               BASE: ${{ inputs.base }}
               BODY: ${{ inputs.body }}
@@ -116,7 +105,7 @@ runs:
         - if: steps.git-status.outputs.changes == 'true' && inputs.assignee
           name: Add Assignee
           shell: bash
-          run: gh pr edit --add-assignee $ASSIGNEE
+          run: gh pr edit --add-assignee "$ASSIGNEE"
           env:
               ASSIGNEE: ${{ inputs.assignee }}
               GH_TOKEN: ${{ inputs.github-token }}
