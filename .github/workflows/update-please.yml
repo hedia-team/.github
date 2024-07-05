@@ -22,10 +22,9 @@ on:
                 type: choice
                 description: Target repositories with topic
                 required: true
-                default: backend
+                default: service
                 options:
                     - app
-                    - backend
                     - dev
                     - io
                     - module
