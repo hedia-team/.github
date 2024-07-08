@@ -31,4 +31,4 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
             - name: Run Package Lint
-              run: npm run package:lint --if-present
+              run: npm run package:lint
