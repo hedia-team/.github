@@ -38,6 +38,7 @@ jobs:
                   release-type: node
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   target-branch: ${{ github.ref_name }}
+                  config-file: ".github/release-please-config.json"
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
