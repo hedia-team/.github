@@ -10,10 +10,9 @@
 			"section": "Bug Fixes"
 		},
 		{
-			"type": "deps",
-			"section": "Dependencies",
-			"hidden": false,
-			"patch": true
+			"type": "chores",
+			"section": "CHOOOOOORES",
+			"hidden": false
 		}
 	]
 }
