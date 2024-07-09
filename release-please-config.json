@@ -12,7 +12,8 @@
 		{
 			"type": "chores",
 			"section": "CHOOOOOORES",
-			"hidden": false
+			"hidden": false,
+			"patch": true
 		}
 	]
 }
