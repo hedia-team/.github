@@ -33,6 +33,7 @@ jobs:
         steps:
             - name: Fetch release-please configuration
               run: |
+                mkdir -p .github
                 curl -o .github/release-please-config.json https://raw.githubusercontent.com/hedia-team/.github/enable-deps-as-release/release-please-config.json
 
             - id: release-please
