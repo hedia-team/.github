@@ -22,11 +22,12 @@ on:
                 type: choice
                 description: PR must have label
                 required: true
-                default: chore
+                default: deps
                 options:
                     - build
                     - chore
                     - ci
+                    - deps
                     - docs
                     - style
                     - test
