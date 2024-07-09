@@ -92,7 +92,7 @@ jobs:
                   force: true
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   head: "update-please-${{ github.run_id }}"
-                  title: "chore(deps): update dependencies"
+                  title: "deps: update dependencies"
 
     run-update-please:
         runs-on: ubuntu-latest
