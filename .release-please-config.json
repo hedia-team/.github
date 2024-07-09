@@ -1,0 +1,31 @@
+{
+	"release-type": "node",
+	"packages": {
+		".": {
+			"release-type": "node",
+			"extra-files": ["package.json", "package-lock.json"],
+			"changelog-path": "CHANGELOG.md",
+			"pull-request-title-pattern": "chore: release ${version}",
+			"include-v-in-tag": true,
+			"bump-minor-pre-major": true,
+			"separate-pull-requests": false,
+			"changelog-sections": [
+				{
+					"type": "feat",
+					"section": "Features"
+				},
+				{
+					"type": "fix",
+					"section": "Bug Fixes"
+				},
+				{
+					"type": "deps",
+					"section": "Dependencies"
+				}
+			],
+			"release-as": {
+				"deps": "minor"
+			}
+		}
+	}
+}
