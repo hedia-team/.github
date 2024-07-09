@@ -31,13 +31,6 @@ jobs:
               contains(github.event.pull_request.labels.*.name, 'autorelease: pending')
             )
         steps:
-            - name: Fetch release-please configuration
-              run: |
-                curl -o release-please-config.json https://raw.githubusercontent.com/hedia-team/.github/enable-deps-as-release/release-please-config.json
-
-            - name: Debug Configuration
-              run: cat release-please-config.json
-
             - id: release-please
               name: Release Please
               uses: googleapis/release-please-action@v4
@@ -45,7 +38,7 @@ jobs:
                   release-type: node
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   target-branch: ${{ github.ref_name }}
-                  config-file: "release-please-config.json"
+                  config-file: "https://raw.githubusercontent.com/hedia-team/.github/enable-deps-as-release/release-please-config.json"
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
