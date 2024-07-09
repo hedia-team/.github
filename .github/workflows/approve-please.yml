@@ -35,7 +35,7 @@ on:
                 description: PR title must match
                 required: true
                 options:
-                    - "chore(deps): update dependencies"
+                    - "deps: update dependencies"
             action:
                 type: choice
                 description: Action to perform
