@@ -1,0 +1,17 @@
+{
+	"release-type": "node",
+	"changelog-sections": [
+		{
+			"type": "feat",
+			"section": "Fooaoaoaoaooaaeatures"
+		},
+		{
+			"type": "fix",
+			"section": "Bug Fixes"
+		},
+		{
+			"type": "deps",
+			"section": "Dependencies"
+		}
+	]
+}
