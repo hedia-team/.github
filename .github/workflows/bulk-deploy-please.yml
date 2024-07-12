@@ -16,15 +16,6 @@ on:
                     - platform
                     - service
                     - test
-            target:
-                type: choice
-                description: Target versions to upgrade to
-                required: true
-                default: minor
-                options:
-                    - latest
-                    - minor
-                    - patch
 
 jobs:
     bulk-deploy-please:
