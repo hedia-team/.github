@@ -1,4 +1,4 @@
-name: Approve Please
+name: Bulk Approve Please
 
 on:
     workflow_dispatch:
@@ -47,7 +47,7 @@ on:
                     - Search PRs
 
 jobs:
-    approve-please:
+    bulk-approve-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
