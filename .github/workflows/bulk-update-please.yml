@@ -1,0 +1,53 @@
+name: Bulk Update Please
+
+on:
+    workflow_dispatch:
+        inputs:
+            topic:
+                type: choice
+                description: Target repositories with topic
+                required: true
+                default: service
+                options:
+                    - app
+                    - backend
+                    - dev
+                    - io
+                    - module
+                    - org
+                    - platform
+                    - runtime
+                    - service
+                    - test
+            target:
+                type: choice
+                description: Target versions to upgrade to
+                required: true
+                default: minor
+                options:
+                    - latest
+                    - minor
+                    - patch
+
+jobs:
+    bulk-update-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Bulk Update Please
+              run: |
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+
+                  echo "Running Update Please for the following repos:"
+
+                  for url in $urls
+                  do
+                    echo "* $url"
+                    gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
+                  done
+
+                  echo " "
+                  echo "Feel free to approve the PRs created by bulk-update-please once the checks have passed using bulk-approve-please!"
+                  echo "https://github.com/hedia-team/.github/actions/workflows/bulk-approve-please.yml"
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
