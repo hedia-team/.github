@@ -1,0 +1,50 @@
+name: Bulk Deploy Please
+
+on:
+    workflow_dispatch:
+        inputs:
+            topic:
+                type: choice
+                description: Target repositories with topic
+                required: true
+                default: service
+                options:
+                    - app
+                    - backend
+                    - io
+                    - org
+                    - platform
+                    - service
+                    - test
+            target:
+                type: choice
+                description: Target versions to upgrade to
+                required: true
+                default: minor
+                options:
+                    - latest
+                    - minor
+                    - patch
+
+jobs:
+    bulk-deploy-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Bulk Deploy Please
+              run: |
+                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+
+                  echo "Running Deploy Please for the following repos:"
+
+                  for url in $urls
+                  do
+                    echo "* $url"
+                    gh workflow run --repo $url deploy-please.yml || true
+                  done
+
+                  echo " "
+                  echo "Great job! Remember to check each deployment status on Scalingo."
+                  echo "https://dashboard.scalingo.com/apps"
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
