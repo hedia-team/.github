@@ -16,33 +16,6 @@ on:
                 description: Needed to access private @hedia npm packages
                 required: true
 
-    workflow_dispatch:
-        inputs:
-            topic:
-                type: choice
-                description: Target repositories with topic
-                required: true
-                default: service
-                options:
-                    - app
-                    - dev
-                    - io
-                    - module
-                    - org
-                    - platform
-                    - runtime
-                    - service
-                    - test
-            target:
-                type: choice
-                description: Target versions to upgrade to
-                required: true
-                default: minor
-                options:
-                    - latest
-                    - minor
-                    - patch
-
 permissions:
     contents: write
     pull-requests: write
@@ -51,7 +24,6 @@ jobs:
     update-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
-        if: github.event.repository.name != '.github'
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
@@ -93,26 +65,3 @@ jobs:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   head: "update-please-${{ github.run_id }}"
                   title: "deps: update dependencies"
-
-    run-update-please:
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        if: github.event.repository.name == '.github'
-        steps:
-            - name: Run Update Please
-              run: |
-                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
-
-                  echo "Running Update Please for the following repos:"
-
-                  for url in $urls
-                  do
-                    echo "* $url"
-                    gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
-                  done
-
-                  echo " "
-                  echo "Feel free to approve the PRs created by update-please once the checks have passed using approve-please!"
-                  echo "https://github.com/hedia-team/.github/actions/workflows/approve-please.yml"
-              env:
-                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}

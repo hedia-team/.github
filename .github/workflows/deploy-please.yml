@@ -9,7 +9,7 @@ on:
                 required: true
             version:
                 type: string
-                description: The release version to deploy. For example, "v1.0.0". If not provided, the release that triggered the workflow will be used.
+                description: The release version to deploy. For example, "v1.0.0". Default to the greatest version. If a release triggered the workflow, its tag will be used.
                 required: false
 
         secrets:
@@ -22,15 +22,30 @@ on:
 
 jobs:
     deploy-please:
-        if: inputs.version || endsWith(github.ref_name, '.0.0') == false
+        if: github.event_name != 'release' || endsWith(github.ref_name, '.0.0') == false
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
 
+            - id: version
+              name: Select Version
+              run: |
+                  if [[ -n "$INPUT" ]]; then
+                    VERSION="$INPUT"
+                  elif [[ -n "$RELEASE" ]]; then
+                    VERSION="$RELEASE"
+                  else
+                    VERSION="$(git tag | grep --regexp='^v[0-9]' | sort --version-sort | tail -1)"
+                  fi
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+              env:
+                  INPUT: ${{ inputs.version }}
+                  RELEASE: ${{ github.event_name == 'release' && github.ref_name }}
+
             - name: Download the Release
-              run: gh release download ${{ inputs.version || github.ref_name }} --archive=tar.gz
+              run: gh release download ${{ steps.version.outputs.version }} --archive=tar.gz
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
@@ -49,4 +64,4 @@ jobs:
               env:
                   APPS: ${{ inputs.apps }}
                   REPO: ${{ github.event.repository.name }}
-                  VERSION: ${{ inputs.version || github.ref_name }}
+                  VERSION: ${{ steps.version.outputs.version }}

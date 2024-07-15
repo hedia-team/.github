@@ -1,4 +1,4 @@
-name: Issues Please
+name: Bulk Issues Please
 
 on:
     workflow_dispatch:
@@ -28,7 +28,7 @@ on:
                 required: false
 
 jobs:
-    issues-please:
+    bulk-issues-please:
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
