@@ -40,21 +40,20 @@ jobs:
                   default-branch: ${{ github.ref_name }}
                   changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"deps","section":"Dependencies","hidden":false}]'
 
-            - name: Assign Please
+            - if: ${{ steps.release-please.outputs.release_created }}
+              name: Assign Please
               uses: actions/github-script@v6
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      if (${{steps.release-please.outputs.releases_created}}) {
-                          const owner = "${{github.repository_owner}}";
-                          const repo = "${{github.event.repository.name}}";
-                          const issue_number = JSON.parse(JSON.stringify(${{steps.release-please.outputs.pr}})).number;
-                          const assignees = ["${{github.actor}}"];
+                      const owner = "${{ github.repository_owner }}";
+                      const repo = "${{ github.event.repository.name }}";
+                      const issue_number = JSON.parse(JSON.stringify(${{ steps.release-please.outputs.pr }})).number;
+                      const assignees = ["${{ github.actor }}"];
 
-                          console.log(`@${owner}/${repo}#${issue_number}: Assigning PR to ${assignees}`);
+                      console.log(`@${owner}/${repo}#${issue_number}: Assigning PR to ${assignees}`);
 
-                          await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
-                      }
+                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
