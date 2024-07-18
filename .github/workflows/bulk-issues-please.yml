@@ -34,7 +34,7 @@ jobs:
         steps:
             - name: Create Issues
               run: |
-                  footer=":technologist: @${{ github.actor }} created this issue using <a href=\"https://github.com/hedia-team/.github/actions/workflows/bulk-issue-please.yml\">bulk-issue-please</a> :robot:"
+                  footer=":technologist: @${{ github.actor }} created this issue using <a href=\"https://github.com/hedia-team/.github/actions/workflows/bulk-issues-please.yml\">bulk-issues-please</a> :robot:"
                   body=$([ -n "${{ inputs.body }}" ] && echo "${{ inputs.body }}<hr>$footer" || echo "$footer")
 
                   echo "Creating the following issues:"
