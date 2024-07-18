@@ -94,7 +94,7 @@ jobs:
                       echo " "
                       echo "Approving PRs ..."
 
-                      body=":technologist: @${{ github.actor }} approved this PR using [approve-please](https://github.com/hedia-team/.github/actions/workflows/approve-please.yml) :robot:"
+                      body=":technologist: @${{ github.actor }} approved this PR using [bulk-approve-please](https://github.com/hedia-team/.github/actions/workflows/bulk-approve-please.yml) :robot:"
                       for url in "${actionable_urls[@]}"
                       do
                         gh pr review --approve --body "$body" $url
