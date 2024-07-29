@@ -28,6 +28,11 @@ on:
                     - latest
                     - minor
                     - patch
+            packages:
+               type: string
+               description: Which packages to consider for update
+               required: true
+               default: "*"
 
 jobs:
     bulk-update-please:
@@ -43,7 +48,7 @@ jobs:
                   for url in $urls
                   do
                     echo "* $url"
-                    gh workflow run --repo $url --raw-field target=${{ inputs.target }} update-please.yml || true
+                    gh workflow run --repo $url --ref foo2 --raw-field target=${{ inputs.target }} --raw-field filter="$PACKAGES" update-please.yml || true
                   done
 
                   echo " "
@@ -51,3 +56,4 @@ jobs:
                   echo "https://github.com/hedia-team/.github/actions/workflows/bulk-approve-please.yml"
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
+                  PACKAGES: ${{ input.packages }}
