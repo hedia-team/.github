@@ -7,6 +7,10 @@ on:
                 type: string
                 description: Target versions to upgrade to. For example, "latest", "minor" or "patch".
                 default: minor
+            package_filter:
+                type: string
+                description: Which packages to upgrade
+                default: "*"
 
         secrets:
             HEDIA_BOT_GITHUB_PAT:
@@ -44,9 +48,10 @@ jobs:
               run: npm install -g npm-check-updates
 
             - name: Update ${{ inputs.target || 'minor' }} dependencies
-              run: ncu -t ${{ inputs.target || 'minor' }} -u --install always
+              run: ncu -t ${{ inputs.target || 'minor' }} -u --install always --filter "$PACKAGE_FILTER"
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+                  PACKAGE_FILTER: ${{ inputs.package_filter }}
 
             - name: Audit dependencies
               run: npm audit fix ${{ inputs.target == 'latest' && '--force' || ''}}
