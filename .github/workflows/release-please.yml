@@ -41,19 +41,32 @@ jobs:
                   changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"deps","section":"Dependencies","hidden":false}]'
 
             - if: ${{ steps.release-please.outputs.release_created }}
-              name: Assign Please
-              uses: actions/github-script@v6
+              name: Download Test report
+              uses: actions/download-artifact@v4
+              with:
+                  name: report
+                  path: .
+
+            - if: ${{ steps.release-please.outputs.release_created }}
+              name: Upload Test report to Release
+              uses: actions/github-script@v7
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      const owner = "${{ github.repository_owner }}";
-                      const repo = "${{ github.event.repository.name }}";
-                      const issue_number = JSON.parse(JSON.stringify(${{ steps.release-please.outputs.pr }})).number;
-                      const assignees = ["${{ github.actor }}"];
+                      const fs = require('fs');
+                      const { context, github } = require('@actions/github');
 
-                      console.log(`@${owner}/${repo}#${issue_number}: Assigning PR to ${assignees}`);
+                      const tag = ${{ steps.release-please.outputs.tag_name }};
+                      const file = fs.readFileSync('test.json');
 
-                      await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
+                      await github.repos.uploadReleaseAsset({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        tag,
+                        name: 'test.json',
+                        data: file
+                      });
+
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
             tag_name: ${{ steps.release-please.outputs.tag_name }}
