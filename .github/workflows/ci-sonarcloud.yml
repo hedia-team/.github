@@ -43,7 +43,7 @@ jobs:
 
             - name: Check Coverage
               id: coverage
-              run: test -e coverage/coverage.xml && echo "file=true" >> $GITHUB_OUTPUT || echo "file=false" >> $GITHUB_OUTPUT
+              run: test -e coverage/lcov.info && echo "file=true" >> $GITHUB_OUTPUT || echo "file=false" >> $GITHUB_OUTPUT
 
             - name: Select Project
               env:
@@ -59,4 +59,4 @@ jobs:
                   args: >
                       -Dsonar.projectKey=${{ env.GITHUB_PROJECT }}
                       -Dsonar.organization=${{ github.repository_owner }}
-                      ${{steps.coverage.outputs.file == 'true' && '-Dsonar.coverageReportPaths=coverage/coverage.xml' || ''}}
+                      ${{steps.coverage.outputs.file == 'true' && '-Dsonar.javascript.lcov.reportPaths=coverage/lcov.info' || ''}}
