@@ -40,20 +40,33 @@ jobs:
                   default-branch: ${{ github.ref_name }}
                   changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"deps","section":"Dependencies","hidden":false}]'
 
-            - if: ${{ steps.release-please.outputs.release_created }}
-              name: Download Test report
+        outputs:
+            release_created: ${{ steps.release-please.outputs.release_created }}
+            tag_name: ${{ steps.release-please.outputs.tag_name }}
+
+    build:
+        if: ${{ needs.release-please.outputs.release_created }}
+        needs: release-please
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-typescript.yml@latest
+
+    test:
+        needs: build
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-test.yml@test-report
+
+    attach-test-report-to-release:
+        needs: test
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Download test report
               uses: actions/download-artifact@v4
               with:
                   path: .
                   pattern: report
 
-            - if: ${{ steps.release-please.outputs.release_created }}
-              name: Upload Test report to Release
-
+            - name: Upload test report to release
               run: gh release upload ${{ steps.release-please.outputs.tag_name }} report/test.json
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-
-        outputs:
-            release_created: ${{ steps.release-please.outputs.release_created }}
-            tag_name: ${{ steps.release-please.outputs.tag_name }}
