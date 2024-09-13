@@ -74,7 +74,7 @@ jobs:
     test:
         needs: build
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-test.yml@test-report
+        uses: hedia-team/.github/.github/workflows/ci-test.yml@latest
         with:
             postgres: ${{ inputs.postgres }}
             rabbitmq: ${{ inputs.rabbitmq }}
