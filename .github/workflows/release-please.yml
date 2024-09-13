@@ -65,13 +65,13 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Download test report
+            - name: Download reports
               uses: actions/download-artifact@v4
               with:
                   path: .
-                  pattern: report
+                  pattern: reports
 
-            - name: Upload test report to release
-              run: gh release upload ${{ needs.release-please.outputs.tag_name }} report/test.json
+            - name: Upload reports to release
+              run: gh release upload ${{ needs.release-please.outputs.tag_name }} reports
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}

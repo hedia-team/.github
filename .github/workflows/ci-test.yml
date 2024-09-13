@@ -107,14 +107,8 @@ jobs:
                   PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
                   SLACK_APP_TOKEN: ${{ secrets.SLACK_APP_TOKEN }}
 
-            - name: Upload Coverage
+            - name: Upload reports
               uses: actions/upload-artifact@v4
               with:
-                  name: coverage
-                  path: lcov.info
-
-            - name: Upload Test report
-              uses: actions/upload-artifact@v4
-              with:
-                  name: report
-                  path: test.json
+                  name: reports
+                  path: reports
