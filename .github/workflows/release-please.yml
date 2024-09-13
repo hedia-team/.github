@@ -72,6 +72,6 @@ jobs:
                   pattern: reports
 
             - name: Upload reports to release
-              run: gh release upload ${{ needs.release-please.outputs.tag_name }} reports
+              run: gh release upload ${{ needs.release-please.outputs.tag_name }} reports/*
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
