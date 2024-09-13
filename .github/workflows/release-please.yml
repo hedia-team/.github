@@ -2,6 +2,27 @@ name: Release Please
 
 on:
     workflow_call:
+        inputs:
+            test-reports:
+                description: Whether or not to run tests that produce reports to be uploaded to the release. Default to true
+                required: false
+                default: true
+                type: boolean
+            postgres:
+                description: Database used in this workflow. Default to none
+                required: false
+                type: string
+            rabbitmq:
+                description: Whether or not to use RabbitMQ in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
+            redis:
+                description: Whether or not to use Redis in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
+
         outputs:
             release_created:
                 description: "Whether or not a release was created"
@@ -45,7 +66,7 @@ jobs:
             tag_name: ${{ steps.release-please.outputs.tag_name }}
 
     build:
-        if: ${{ needs.release-please.outputs.release_created }}
+        if: ${{ needs.release-please.outputs.release_created && inputs.test-reports }}
         needs: release-please
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/ci-typescript.yml@latest
@@ -54,6 +75,10 @@ jobs:
         needs: build
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/ci-test.yml@test-report
+        with:
+            postgres: ${{ inputs.postgres }}
+            rabbitmq: ${{ inputs.rabbitmq }}
+            redis: ${{ inputs.redis }}
 
     attach-test-report-to-release:
         needs:
