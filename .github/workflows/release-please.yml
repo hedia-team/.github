@@ -56,7 +56,9 @@ jobs:
         uses: hedia-team/.github/.github/workflows/ci-test.yml@test-report
 
     attach-test-report-to-release:
-        needs: test
+        needs:
+            - release-please
+            - test
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
@@ -67,6 +69,6 @@ jobs:
                   pattern: report
 
             - name: Upload test report to release
-              run: gh release upload ${{ steps.release-please.outputs.tag_name }} report/test.json
+              run: gh release upload ${{ needs.release-please.outputs.tag_name }} report/test.json
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
