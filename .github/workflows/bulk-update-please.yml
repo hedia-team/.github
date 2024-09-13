@@ -29,10 +29,10 @@ on:
                     - minor
                     - patch
             package_filter:
-               type: string
-               description: Which packages to consider for update
-               required: true
-               default: "*"
+                type: string
+                description: Which packages to consider for update
+                required: true
+                default: "*"
 
 jobs:
     bulk-update-please:

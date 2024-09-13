@@ -35,15 +35,15 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - name: Download Coverage
+            - name: Download reports
               uses: actions/download-artifact@v4
               with:
                   path: .
-                  pattern: coverage
+                  pattern: reports
 
             - name: Check Coverage
               id: coverage
-              run: test -e coverage/lcov.info && echo "file=true" >> $GITHUB_OUTPUT || echo "file=false" >> $GITHUB_OUTPUT
+              run: test -e reports/lcov.info && echo "file=true" >> $GITHUB_OUTPUT || echo "file=false" >> $GITHUB_OUTPUT
 
             - name: Select Project
               env:
@@ -59,4 +59,4 @@ jobs:
                   args: >
                       -Dsonar.projectKey=${{ env.GITHUB_PROJECT }}
                       -Dsonar.organization=${{ github.repository_owner }}
-                      ${{steps.coverage.outputs.file == 'true' && '-Dsonar.javascript.lcov.reportPaths=coverage/lcov.info' || ''}}
+                      ${{steps.coverage.outputs.file == 'true' && '-Dsonar.javascript.lcov.reportPaths=reports/lcov.info' || ''}}
