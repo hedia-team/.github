@@ -92,7 +92,7 @@ jobs:
                   pattern: dist
 
             - name: Load Environment Variables
-              run: (op read op://Github/${{ github.event.repository.name }}/ENV_FILE || true) > .env
+              run: (op read op://Github/${{ github.event.repository.name }}/ENV_FILE || true) >> .env
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
