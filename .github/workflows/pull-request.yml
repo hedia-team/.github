@@ -57,6 +57,7 @@ jobs:
                       await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees });
 
             - if: >
+                  github.event.pull_request.comments == 0 &&
                   github.event.pull_request.draft == false &&
                   github.event.pull_request.requested_reviewers[0] == null &&
                   github.event.pull_request.requested_teams[0] == null
