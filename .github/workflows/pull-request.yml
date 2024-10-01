@@ -98,7 +98,7 @@ jobs:
                       const repo = "${{ github.event.repository.name }}";
                       const pull_number = ${{ github.event.pull_request.number }};
                       const reviewers = [];
-                      const team_reviewers = "${{ github.event.pull_request.requested_teams }}".split(',').filter((reviewer) => reviewer);
+                      const team_reviewers = "${{ github.event.pull_request.requested_teams.length }}".split(',').filter((reviewer) => reviewer);
 
                       console.log(`@${owner}/${repo}#${pull_number}: Removing review from ${reviewers.concat(team_reviewers)}`);
 
