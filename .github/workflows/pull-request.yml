@@ -68,13 +68,15 @@ jobs:
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   script: |
-                      console.log('->', ${{ github.event.pull_request.review_comments }})
-
                       const owner = "${{ github.repository_owner }}";
                       const repo = "${{ github.event.repository.name }}";
                       const pull_number = ${{ github.event.pull_request.number }};
                       const reviewers = "${{ github.event.inputs.reviewers || inputs.reviewers }}".split(',').filter((reviewer) => reviewer);
                       const team_reviewers = "${{ github.event.inputs.team-reviewers || inputs.team-reviewers }}".split(',').filter((reviewer) => reviewer);
+
+                      const foo = await github octokit.rest.pulls.listReviewComments({ owner, repo, pull_number });
+
+                      console.log(JSON.stringify(foo));
 
                       console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
 
