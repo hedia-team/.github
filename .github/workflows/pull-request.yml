@@ -8,6 +8,7 @@ on:
             - opened
             - ready_for_review
             - reopened
+            - review_requested
             - synchronize
 
     workflow_call:
@@ -86,9 +87,6 @@ jobs:
                   ) || (
                     github.event.pull_request.requested_reviewers[0] != null &&
                     github.event.pull_request.requested_teams[0] != null
-                  ) || (
-                    github.event.pull_request.requested_teams[0] != null &&
-                    github.event.pull_request.review_comments > 0
                   )
               name: Remove Team Request
               uses: actions/github-script@v7
