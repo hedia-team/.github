@@ -76,7 +76,7 @@ jobs:
 
                       console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
 
-                      const { data } = await github.rest.pulls.get({ owner, repo, pull_number });
+                      const { data } = await github.rest.pulls.listReviews({ owner, repo, pull_number });
                       console.log(data);
 
                       await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
