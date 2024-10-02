@@ -74,10 +74,16 @@ jobs:
                       const reviewers = "${{ github.event.inputs.reviewers || inputs.reviewers }}".split(',').filter((reviewer) => reviewer);
                       const team_reviewers = "${{ github.event.inputs.team-reviewers || inputs.team-reviewers }}".split(',').filter((reviewer) => reviewer);
 
-                      console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
+                      console.log(`@${owner}/${repo}#${pull_number}: Retrieving reviews`);
 
                       const { data } = await github.rest.pulls.listReviews({ owner, repo, pull_number });
-                      console.log(data);
+
+                      if (data.length === 0) {
+                          console.log(`@${owner}/${repo}#${pull_number}: Skipping request review as there are already reviews`);
+                          return;
+                      }
+
+                      console.log(`@${owner}/${repo}#${pull_number}: Requesting review from ${reviewers.concat(team_reviewers)}`);
 
                       await github.rest.pulls.requestReviewers({ owner, repo, pull_number, reviewers, team_reviewers });
 
