@@ -74,7 +74,7 @@ jobs:
                       const reviewers = "${{ github.event.inputs.reviewers || inputs.reviewers }}".split(',').filter((reviewer) => reviewer);
                       const team_reviewers = "${{ github.event.inputs.team-reviewers || inputs.team-reviewers }}".split(',').filter((reviewer) => reviewer);
 
-                      const foo = await github octokit.rest.pulls.listReviewComments({ owner, repo, pull_number });
+                      const foo = await github.rest.pulls.listReviewComments({ owner, repo, pull_number });
 
                       console.log(JSON.stringify(foo));
 
