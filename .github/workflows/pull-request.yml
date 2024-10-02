@@ -78,7 +78,7 @@ jobs:
 
                       const { data } = await github.rest.pulls.listReviews({ owner, repo, pull_number });
 
-                      if (data.length === 0) {
+                      if (data.length > 0) {
                           console.log(`@${owner}/${repo}#${pull_number}: Skipping request review as there are already reviews`);
                           return;
                       }
