@@ -18,6 +18,7 @@ on:
                     - backend
                     - bots
                     - development
+                    - mobile
             label:
                 type: choice
                 description: PR must have label
