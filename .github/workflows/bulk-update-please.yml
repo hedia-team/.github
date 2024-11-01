@@ -2,7 +2,7 @@ name: Bulk Update Please
 
 on:
     schedule:
-        - cron: "30 10 * * 5"
+        - cron: "30 13 * * 5"
 
     workflow_dispatch:
         inputs:
@@ -44,14 +44,18 @@ jobs:
         steps:
             - name: Bulk Update Please
               run: |
-                  urls=$(gh repo list hedia-team --limit 1000 --topic=${{ inputs.topic }} --no-archived --json=url --jq=".[] | .url")
+                  topic="${{ inputs.topic || 'backend' }}"
+                  target="${{ inputs.target || 'minor' }}"
+                  package_filter="${{ inputs.package_filter || '*' }}"
+
+                  urls=$(gh repo list hedia-team --limit 1000 --topic="${topic}" --no-archived --json=url --jq=".[] | .url")
 
                   echo "Running Update Please for the following repos:"
 
                   for url in $urls
                   do
                     echo "* $url"
-                    gh workflow run --repo $url --raw-field target=${{ inputs.target }} --raw-field package_filter="$PACKAGE_FILTER" update-please.yml || true
+                    gh workflow run --repo $url --raw-field target="${target}" --raw-field package_filter="${package_filter}" update-please.yml || true
                   done
 
                   echo " "
