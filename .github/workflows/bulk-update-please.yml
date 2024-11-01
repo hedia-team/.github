@@ -44,18 +44,14 @@ jobs:
         steps:
             - name: Bulk Update Please
               run: |
-                  topic="${{ inputs.topic || 'backend' }}"
-                  target="${{ inputs.target || 'minor' }}"
-                  package_filter="${{ inputs.package_filter || '*' }}"
-
-                  urls=$(gh repo list hedia-team --limit 1000 --topic="${topic}" --no-archived --json=url --jq=".[] | .url")
+                  urls=$(gh repo list hedia-team --limit 1000 --topic="${TOPIC}" --no-archived --json=url --jq=".[] | .url")
 
                   echo "Running Update Please for the following repos:"
 
                   for url in $urls
                   do
                     echo "* $url"
-                    gh workflow run --repo $url --raw-field target="${target}" --raw-field package_filter="${package_filter}" update-please.yml || true
+                    gh workflow run --repo $url --raw-field target="${TARGET}" --raw-field package_filter="${PACKAGE_FILTER}" update-please.yml || true
                   done
 
                   echo " "
@@ -63,4 +59,6 @@ jobs:
                   echo "https://github.com/hedia-team/.github/actions/workflows/bulk-approve-please.yml"
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  PACKAGE_FILTER: ${{ inputs.package_filter }}
+                  TOPIC: ${{ inputs.topic || 'backend' }}
+                  TARGET: ${{ inputs.target || 'minor' }}
+                  PACKAGE_FILTER: ${{ inputs.package_filter || '*' }}
