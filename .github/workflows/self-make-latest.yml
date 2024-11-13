@@ -1,0 +1,23 @@
+name: Make Latest
+
+on:
+    release:
+        types:
+            - created
+
+jobs:
+    make-latest:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set Latest Tag
+              run: |
+                  git fetch --tags
+                  git checkout ${{ github.event.release.tag_name }}
+                  git tag -f latest
+                  git push origin --force --tags
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

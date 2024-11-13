@@ -1,16 +1,6 @@
 name: Pull Request
 
 on:
-    pull_request:
-        types:
-            - converted_to_draft
-            - edited
-            - opened
-            - ready_for_review
-            - reopened
-            - review_requested
-            - synchronize
-
     workflow_call:
         inputs:
             reviewers:

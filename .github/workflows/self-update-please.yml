@@ -1,0 +1,25 @@
+name: Update Please
+
+on:
+    workflow_dispatch:
+        inputs:
+            target:
+                type: choice
+                description: Target versions to upgrade to
+                required: true
+                options:
+                    - latest
+                    - minor
+                    - patch
+            package_filter:
+                type: string
+                description: Which packages to upgrade
+                default: "*"
+
+jobs:
+    update-please:
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/update-please.yml@latest
+        with:
+            target: ${{ github.event.inputs.target }}
+            package_filter: ${{ github.event.inputs.package_filter }}
