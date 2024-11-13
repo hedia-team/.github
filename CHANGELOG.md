@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.5.0](https://github.com/hedia-team/.github/compare/v7.4.1...v7.5.0) (2024-11-13)
+
+
+### Features
+
+* Initiate E2E tests automatically as soon as a Docker image has been built ([#110](https://github.com/hedia-team/.github/issues/110)) ([9a7b271](https://github.com/hedia-team/.github/commit/9a7b271de73595c364a4614bc7ae925d17560253)), closes [#104](https://github.com/hedia-team/.github/issues/104)
+
 ## [7.4.1](https://github.com/hedia-team/.github/compare/v7.4.0...v7.4.1) (2024-11-13)
 
 
