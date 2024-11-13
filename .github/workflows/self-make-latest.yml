@@ -1,4 +1,4 @@
-name: Make Latest
+name: Self Make Latest
 
 on:
     release:

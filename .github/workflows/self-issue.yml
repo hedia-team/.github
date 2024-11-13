@@ -1,4 +1,4 @@
-name: Issue
+name: Self Issue
 
 on:
     issues:

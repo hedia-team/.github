@@ -1,4 +1,4 @@
-name: Release Please
+name: Self Release Please
 
 on:
     pull_request:
