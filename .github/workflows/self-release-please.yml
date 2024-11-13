@@ -13,3 +13,5 @@ jobs:
     release-please:
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/release-please.yml@latest
+        with:
+            test-reports: false
