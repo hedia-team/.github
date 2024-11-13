@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.4.1](https://github.com/hedia-team/.github/compare/v7.4.0...v7.4.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* Avoid trying to run tests after release ([#108](https://github.com/hedia-team/.github/issues/108)) ([1980682](https://github.com/hedia-team/.github/commit/19806826cb4fcaa4557fd2589bd133c2265c19c7))
+
 ## [7.4.0](https://github.com/hedia-team/.github/compare/v7.3.0...v7.4.0) (2024-11-13)
 
 
