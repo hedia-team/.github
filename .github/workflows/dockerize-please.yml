@@ -61,3 +61,9 @@ jobs:
                   tags: |
                       ghcr.io/${{ github.repository }}:${{ inputs.tag_name }}
                       ghcr.io/${{ github.repository }}:latest
+
+            - name: Initiate E2E test workflow
+              run: |
+                  gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" test-please.yml
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
