@@ -1,4 +1,4 @@
-name: Update Please
+name: Self Update Please
 
 on:
     workflow_dispatch:
