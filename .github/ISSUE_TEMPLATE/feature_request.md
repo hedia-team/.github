@@ -3,11 +3,10 @@ name: Feature request
 about: Suggest an idea for this project
 title: "[FEATURE]: "
 labels: feature
-assignees: ''
-
+assignees: ""
 ---
 
-**Describe the problem you'd like solved.**
+**Describe the problem you'd like solved**
 Eg. I'm always frustrated when ...
 
 **Describe the solution you'd like**
