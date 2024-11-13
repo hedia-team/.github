@@ -1,0 +1,13 @@
+name: Issue
+
+on:
+    issues:
+        types:
+            - edited
+            - opened
+            - reopened
+
+jobs:
+    issue:
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/issue.yml@latest
