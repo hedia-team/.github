@@ -1,12 +1,6 @@
 name: Issue
 
 on:
-    issues:
-        types:
-            - edited
-            - opened
-            - reopened
-
     workflow_call:
         secrets:
             HEDIA_BOT_GITHUB_PAT:
