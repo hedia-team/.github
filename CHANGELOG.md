@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.6.0](https://github.com/hedia-team/.github/compare/v7.5.0...v7.6.0) (2024-11-18)
+
+
+### Features
+
+* Add a shared build-and-deploy-pages workflow ([#114](https://github.com/hedia-team/.github/issues/114)) ([ff71424](https://github.com/hedia-team/.github/commit/ff714246735426bd124a1cbf9ce9f7ec76b5f008))
+
+
+### Bug Fixes
+
+* Remove issue trigger ([#113](https://github.com/hedia-team/.github/issues/113)) ([b84376c](https://github.com/hedia-team/.github/commit/b84376cd67ed907c96b5503b043323efc8892dbb))
+
 ## [7.5.0](https://github.com/hedia-team/.github/compare/v7.4.1...v7.5.0) (2024-11-13)
 
 
