@@ -1,0 +1,66 @@
+name: Build and Deploy Pages
+
+on:
+    workflow_call:
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to access private @hedia npm packages
+                required: true
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+concurrency:
+    group: pages
+    cancel-in-progress: false
+
+jobs:
+    build-and-deploy-pages:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install 1Password CLI
+              uses: 1password/install-cli-action@v1
+
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: package.json
+                  always-auth: true
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: NPM Install
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: NPM Build
+              run: npm run build --if-present
+
+            - name: Load Environment Variables
+              run: (op read op://Github/${{ github.event.repository.name }}/ENV_FILE || true) > .env
+              env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+            - name: NPM Pages
+              run: npm run pages
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
