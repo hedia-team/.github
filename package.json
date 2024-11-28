@@ -24,8 +24,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies": {
-		"@hedia/package-lint": "1.2.1",
-		"@hedia/prettier-config": "1.2.1"
+		"@hedia/package-lint": "1.2.2",
+		"@hedia/prettier-config": "1.2.2"
 	},
 	"prettier": "@hedia/prettier-config"
 }
