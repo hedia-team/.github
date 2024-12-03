@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.6.1](https://github.com/hedia-team/.github/compare/v7.6.0...v7.6.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* Update the release check to be more permissive ([#120](https://github.com/hedia-team/.github/issues/120)) ([6df690b](https://github.com/hedia-team/.github/commit/6df690b59932a58c4618b5fb0e8c1961db610d1c))
+
+
+### Dependencies
+
+* Update dependencies ([#117](https://github.com/hedia-team/.github/issues/117)) ([34040dc](https://github.com/hedia-team/.github/commit/34040dc9f1c7a680095fd4cb63bb6b7a53810705))
+
 ## [7.6.0](https://github.com/hedia-team/.github/compare/v7.5.0...v7.6.0) (2024-11-18)
 
 
