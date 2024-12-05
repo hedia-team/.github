@@ -23,12 +23,11 @@ on:
                 type: choice
                 description: PR must have label
                 required: true
-                default: deps
+                default: chore
                 options:
                     - build
                     - chore
                     - ci
-                    - deps
                     - docs
                     - style
                     - test
@@ -37,7 +36,7 @@ on:
                 description: PR title must match
                 required: true
                 options:
-                    - "deps: update dependencies"
+                    - "chore: Update dependencies"
             action:
                 type: choice
                 description: Action to perform
