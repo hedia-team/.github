@@ -15,7 +15,7 @@ runs:
               github-token: ${{ inputs.github-token }}
               script: |
                   const { NUMBER, OWNER, REPO, TITLE } = process.env
-                  const regex = /^(build|chore|ci|deps|docs|feat|fix|perf|refactor|revert|style|test)(?:\((\S+)\))?(!)?: (.+)$/;
+                  const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\((\S+)\))?(!)?: (.+)$/;
                   const releaseRegex = /^chore\(\S*\): release/;
 
                   console.log(`Checking title "${TITLE}"`);
@@ -43,15 +43,11 @@ runs:
                   else if (labels.includes("feature")) {
                       labels.push("minor");
                   }
-                  else if (labels.includes("fix")) {
-                      labels.push("patch");
-                  }
-                  else if (labels.includes("deps")) {
-                      labels.push("patch");
-                  }
-
-                  if (releaseRegex.test(TITLE)) {
+                  else if (releaseRegex.test(TITLE)) {
                       labels.push("autorelease: pending");
+                  }
+                  else {
+                      labels.push("patch");
                   }
 
                   console.log(`@${OWNER}/${REPO}#${NUMBER}: Setting labels to ${labels}`);

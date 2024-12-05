@@ -69,4 +69,4 @@ jobs:
                   force: true
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   head: "update-please-${{ github.run_id }}"
-                  title: "deps: Update dependencies"
+                  title: "chore: Update dependencies"
