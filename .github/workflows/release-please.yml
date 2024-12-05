@@ -59,7 +59,7 @@ jobs:
                   release-type: node
                   token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
                   default-branch: ${{ github.ref_name }}
-                  changelog-types: '[{"type":"feat","section":"New Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"revert","section":"Reverted Changes","hidden":false},{"type":"perf","section":"Performance Improvements","hidden":false},{"type":"refactor","section":"Code Refactoring","hidden":false},{"type":"build","section":"Build Process","hidden":false},{"type":"ci","section":"CI/CD","hidden":false},{"type":"test","section":"Testing","hidden":false},{"type":"chore","section":"Chores","hidden":false},{"type":"docs","section":"Documentation Updates","hidden":false},{"type":"style","section":"Pleasing Robots","hidden":false}]'
+                  changelog-types: '[{"type":"feat","section":"New Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"revert","section":"Reverted Changes","hidden":false},{"type":"perf","section":"Performance Improvements","hidden":false},{"type":"refactor","section":"Code Refactoring","hidden":false},{"type":"build","section":"Build Process","hidden":false},{"type":"ci","section":"CI/CD","hidden":false},{"type":"test","section":"Testing","hidden":false},{"type":"chore","section":"Chores","hidden":false},{"type":"docs","section":"Documentation Updates","hidden":false},{"type":"style","section":"Code Formatting","hidden":false}]'
 
         outputs:
             release_created: ${{ steps.release-please.outputs.release_created }}
