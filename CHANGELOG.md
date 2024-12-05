@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.7.0](https://github.com/hedia-team/.github/compare/v7.6.1...v7.7.0) (2024-12-05)
+
+
+### Features
+
+* **release-please:** List all changes made to a repo in the changelog ([#122](https://github.com/hedia-team/.github/issues/122)) ([27dbf0a](https://github.com/hedia-team/.github/commit/27dbf0a35e453e58ffe7d5e60fee4d38fa01a14b))
+* Replace custom `deps` type by `chore` ([#123](https://github.com/hedia-team/.github/issues/123)) ([e89ad4a](https://github.com/hedia-team/.github/commit/e89ad4a0b8e7010ea409bf3488920543fc8262f0))
+
+
+### Bug Fixes
+
+* **issue:** Stop setting labels as it's not the right format ([#124](https://github.com/hedia-team/.github/issues/124)) ([b3e89c3](https://github.com/hedia-team/.github/commit/b3e89c3a3f205b31d15bbfbb9f456a73d1ad37f9))
+
 ## [7.6.1](https://github.com/hedia-team/.github/compare/v7.6.0...v7.6.1) (2024-12-03)
 
 
