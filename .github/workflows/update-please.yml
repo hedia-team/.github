@@ -69,8 +69,9 @@ jobs:
                   else
                     PR_TITLE="chore: Update dependencies"
                   fi
-                  echo "pr_body=$PR_BODY" >> $GITHUB_OUTPUT
-                  echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+                  # Convert special characters and store as output
+                  echo "pr_body=$(printf '%s' "$PR_BODY" | sed 's/%/%25/g; s/\\n/%0A/g; s/\\r/%0D/g')" >> $GITHUB_OUTPUT
+                  echo "pr_title=$(printf '%s' "$PR_TITLE" | sed 's/%/%25/g; s/\\n/%0A/g; s/\\r/%0D/g')" >> $GITHUB_OUTPUT
 
             - name: Audit dependencies
               run: npm audit fix ${{ inputs.target == 'latest' && '--force' || ''}}
