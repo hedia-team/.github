@@ -53,6 +53,9 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
                   PACKAGE_FILTER: ${{ inputs.package_filter }}
 
+            - name: Debug npm-updates.json
+              run: cat npm-updates.json
+
             - id: format-summary
               name: Format Update Summary
               run: |
