@@ -60,11 +60,11 @@ jobs:
               name: Format Update Summary
               run: |
                   updates=$(cat npm-updates.json)
-                  PR_BODY=$(echo "$updates" | jq -r 'to_entries | map("\(.key)    \(.value[0])  →  \(.value[1])") | join("\n")')
+                  PR_BODY=$(echo "$updates" | jq -r 'to_entries | map("\(.key) → \(.value)") | join("\n")')
                   count=$(echo "$updates" | jq length)
                   if [ "$count" -eq 1 ]; then
                     dep=$(echo "$updates" | jq -r 'keys[0]')
-                    to=$(echo "$updates" | jq -r ".[\"$dep\"] | .[1]")
+                    to=$(echo "$updates" | jq -r ".[\"$dep\"]")
                     PR_TITLE="chore: Update $dep to $to"
                   else
                     PR_TITLE="chore: Update dependencies"
