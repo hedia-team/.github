@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.8.0](https://github.com/hedia-team/.github/compare/v7.7.0...v7.8.0) (2024-12-12)
+
+
+### New Features
+
+* Add additional details to Update Please ([#126](https://github.com/hedia-team/.github/issues/126)) ([3940796](https://github.com/hedia-team/.github/commit/3940796f9eeff856e8c4f381187d825bc6697a02))
+
 ## [7.7.0](https://github.com/hedia-team/.github/compare/v7.6.1...v7.7.0) (2024-12-05)
 
 
