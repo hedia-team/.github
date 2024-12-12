@@ -69,6 +69,8 @@ jobs:
                   else
                     PR_TITLE="chore: Update dependencies"
                   fi
+                  echo "PR_BODY: $PR_BODY"
+                  echo "PR_TITLE: $PR_TITLE"
                   # Convert special characters and store as output
                   echo "pr_body=$(printf '%s' "$PR_BODY" | sed 's/%/%25/g; s/\\n/%0A/g; s/\\r/%0D/g')" >> $GITHUB_OUTPUT
                   echo "pr_title=$(printf '%s' "$PR_TITLE" | sed 's/%/%25/g; s/\\n/%0A/g; s/\\r/%0D/g')" >> $GITHUB_OUTPUT
