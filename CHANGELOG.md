@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.9.0](https://github.com/hedia-team/.github/compare/v7.8.0...v7.9.0) (2024-12-18)
+
+
+### New Features
+
+* Enable passing a specific version number to release-please ([#128](https://github.com/hedia-team/.github/issues/128)) ([0ebb888](https://github.com/hedia-team/.github/commit/0ebb888349d55e96884c4d931399617b74894493))
+
 ## [7.8.0](https://github.com/hedia-team/.github/compare/v7.7.0...v7.8.0) (2024-12-12)
 
 
