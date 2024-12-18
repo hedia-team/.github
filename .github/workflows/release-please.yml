@@ -23,7 +23,7 @@ on:
                 default: false
                 type: boolean
             version:
-                description: Specific version number to release, eg '3.0.0' or '3.1.0-rc.0'. If not provided, release-please will determine the version.
+                description: Specific version number to release, eg '3.0.0' or '3.1.0-rc.0'. If not provided, Release Please will determine the version.
                 required: false
                 type: string
 
