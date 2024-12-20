@@ -18,6 +18,7 @@
 		"url": "git+https://github.com/hedia-team/.github.git"
 	},
 	"scripts": {
+		"build": "echo \"Nothing to build.\"",
 		"package:lint": "npx npm-package-json-lint .",
 		"prettier:check": "prettier --check .",
 		"prettier:write": "prettier --write .",
