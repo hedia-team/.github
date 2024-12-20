@@ -21,6 +21,7 @@
 		"package:lint": "npx npm-package-json-lint .",
 		"prettier:check": "prettier --check .",
 		"prettier:write": "prettier --write .",
+		"robots": "npm run prettier:write && npm run package:lint",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies": {
