@@ -5,7 +5,7 @@ on:
         inputs:
             postgres:
                 description: Database used in this workflow. Default to none
-                required: false
+                required: true
                 type: string
 
         secrets:
