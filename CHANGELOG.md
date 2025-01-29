@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.10.0](https://github.com/hedia-team/.github/compare/v7.9.0...v7.10.0) (2025-01-29)
+
+
+### New Features
+
+* Add workflow to verify files made by PG Tools ([#131](https://github.com/hedia-team/.github/issues/131)) ([85066d9](https://github.com/hedia-team/.github/commit/85066d9de3472dfd34ad07efa3b78e1d8d5f014a))
+
+
+### Chores
+
+* Update to latest standards ([#130](https://github.com/hedia-team/.github/issues/130)) ([192356e](https://github.com/hedia-team/.github/commit/192356ed78e6cd3db73e2344f80cc47c3bab2cb8))
+
 ## [7.9.0](https://github.com/hedia-team/.github/compare/v7.8.0...v7.9.0) (2024-12-18)
 
 
