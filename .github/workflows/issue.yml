@@ -16,4 +16,4 @@ jobs:
               uses: actions/add-to-project@releases/v1
               with:
                   github-token: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
-                  project-url: https://github.com/orgs/hedia-team/projects/2
+                  project-url: https://github.com/orgs/hedia-team/projects/${{contains( github.event.issue.labels.*.name, 'operations') && 6 || 2}}
