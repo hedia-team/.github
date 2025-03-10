@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.11.0](https://github.com/hedia-team/.github/compare/v7.10.0...v7.11.0) (2025-03-10)
+
+
+### New Features
+
+* Support new operations project ([#133](https://github.com/hedia-team/.github/issues/133)) ([2d10cab](https://github.com/hedia-team/.github/commit/2d10cab096b752026f84571316e57de1ff4764e9))
+
 ## [7.10.0](https://github.com/hedia-team/.github/compare/v7.9.0...v7.10.0) (2025-01-29)
 
 
