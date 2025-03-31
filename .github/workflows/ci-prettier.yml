@@ -9,7 +9,7 @@ on:
 
 jobs:
     prettier:
-        runs-on: ubuntu-latest
+        runs-on: ${{ vars.RUNNER_NAME }}
         timeout-minutes: 1
 
         steps:
