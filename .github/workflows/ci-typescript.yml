@@ -9,7 +9,7 @@ on:
 
 jobs:
     typescript:
-        runs-on: ubuntu-latest
+        runs-on: ${{ vars.CI_TYPESCRIPT_RUNNER }}
         timeout-minutes: 1
 
         steps:

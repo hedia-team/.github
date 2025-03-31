@@ -9,7 +9,7 @@ on:
 
 jobs:
     prettier:
-        runs-on: ${{ vars.RUNNER_NAME }}
+        runs-on: ${{ vars.CI_PRETTIER_RUNNER }}
         timeout-minutes: 1
 
         steps:

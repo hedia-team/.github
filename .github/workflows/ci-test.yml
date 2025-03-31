@@ -28,7 +28,7 @@ on:
 
 jobs:
     test:
-        runs-on: ${{ vars.RUNNER_NAME }}
+        runs-on: ${{ vars.CI_TEST_RUNNER }}
         timeout-minutes: 5
 
         services:

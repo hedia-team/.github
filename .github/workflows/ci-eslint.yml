@@ -9,7 +9,7 @@ on:
 
 jobs:
     eslint:
-        runs-on: ubuntu-latest
+        runs-on: ${{ vars.CI_ESLINT_RUNNER }}
         timeout-minutes: 1
 
         steps:
