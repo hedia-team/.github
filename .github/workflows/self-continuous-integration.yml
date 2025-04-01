@@ -14,8 +14,8 @@ on:
 jobs:
     format:
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-prettier.yml@feat-runs-on-var
+        uses: hedia-team/.github/.github/workflows/ci-prettier.yml@latest
 
     package:
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-package-lint.yml@feat-runs-on-var
+        uses: hedia-team/.github/.github/workflows/ci-package-lint.yml@latest
