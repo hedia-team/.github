@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.12.0](https://github.com/hedia-team/.github/compare/v7.11.0...v7.12.0) (2025-04-01)
+
+
+### New Features
+
+* Use a var for runs-on ([#136](https://github.com/hedia-team/.github/issues/136)) ([3b33595](https://github.com/hedia-team/.github/commit/3b33595428109c2fbb4c62f0001c00ce0f3cceb4))
+
 ## [7.11.0](https://github.com/hedia-team/.github/compare/v7.10.0...v7.11.0) (2025-03-10)
 
 
