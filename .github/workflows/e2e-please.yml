@@ -1,0 +1,34 @@
+name: E2E Please
+
+on:
+    workflow_call:
+        inputs:
+            github_ref:
+                description: The git ref to check out; will use the tag_name if not provided
+                type: string
+                required: false
+            developer-service:
+                type: string
+                description: The tag to use for the Developer Service Docker image
+                required: false
+
+        secrets:
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to push to GitHub Container Registry
+                required: true
+
+permissions:
+    contents: write
+    pull-requests: write
+    packages: write
+
+jobs:
+    dockerize-please:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Initiate E2E test workflow
+              run: |
+                  gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" --raw-field developer-service=${{ inputs.developer-service }} test-please.yml
+              env:
+                  GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
