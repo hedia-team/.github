@@ -73,6 +73,7 @@ jobs:
                       ghcr.io/${{ github.repository }}:latest
 
             - name: Initiate E2E test workflow
+              if: ${{ inputs.tag_name }}
               run: |
                   gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" test-please.yml
               env:
