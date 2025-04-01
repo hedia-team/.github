@@ -46,7 +46,7 @@ permissions:
 
 jobs:
     release-please:
-        runs-on: ubuntu-latest
+        runs-on: ${{ vars.RELEASE_PLEASE_RUNNER }}
         timeout-minutes: 5
         if: >
             github.event_name == 'workflow_dispatch' ||

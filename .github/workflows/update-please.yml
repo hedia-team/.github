@@ -26,7 +26,7 @@ permissions:
 
 jobs:
     update-please:
-        runs-on: ubuntu-latest
+        runs-on: ${{ vars.UPDATE_PLEASE_RUNNER }}
         timeout-minutes: 5
         steps:
             - name: Checkout Repository
