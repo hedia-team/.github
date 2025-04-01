@@ -3,14 +3,14 @@ name: E2E Please
 on:
     workflow_call:
         inputs:
-            service-name:
+            package-name:
                 type: string
-                description: The Tag to use for the Developer Service Docker image
-                required: false
-            service-tag:
+                description: The Package Name
+                required: true
+            package-tag:
                 type: string
-                description: The Tag to use for the Developer Service Docker image
-                required: false
+                description: The Package Tag
+                required: true
 
         secrets:
             HEDIA_BOT_GITHUB_PAT:
@@ -29,6 +29,6 @@ jobs:
         steps:
             - name: Run E2E Test Workflow
               run: |
-                  gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" --raw-field service-name=${{ inputs.service-name }} --raw-field service-tag=${{ inputs.service-tag }} test-please.yml
+                  gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" --raw-field package-name=${{ inputs.package-name }} --raw-field package-tag=${{ inputs.package-tag }} test-please.yml
               env:
                   GH_TOKEN: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
