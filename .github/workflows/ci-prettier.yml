@@ -10,7 +10,7 @@ on:
 jobs:
     prettier:
         runs-on: ${{ vars.CI_PRETTIER_RUNNER }}
-        timeout-minutes: 5
+        timeout-minutes: 1
 
         steps:
             - name: Checkout Repository

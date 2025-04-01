@@ -10,7 +10,7 @@ on:
 jobs:
     package-lint:
         runs-on: ${{ vars.CI_PACKAGE_LINT_RUNNER }}
-        timeout-minutes: 5
+        timeout-minutes: 1
 
         steps:
             - name: Checkout Repository

@@ -10,8 +10,7 @@ on:
 jobs:
     eslint:
         runs-on: ${{ vars.CI_ESLINT_RUNNER }}
-        timeout-minutes: 5
-
+        timeout-minutes: 1
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
