@@ -10,7 +10,7 @@ on:
 jobs:
     typescript:
         runs-on: ${{ vars.CI_TYPESCRIPT_RUNNER }}
-        timeout-minutes: 1
+        timeout-minutes: 5
 
         steps:
             - name: Checkout Repository
