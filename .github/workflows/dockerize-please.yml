@@ -52,7 +52,17 @@ jobs:
                   username: ${{ github.repository_owner }}
                   password: ${{ secrets.HEDIA_BOT_GITHUB_PAT }}
 
-            - name: Build and push Docker image
+            - name: Build and push Docker image (Ref)
+              if: ${{ inputs.github_ref }}
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  platforms: linux/amd64,linux/arm64
+                  push: true
+                  tags: |
+                      ghcr.io/${{ github.repository }}:${{ inputs.github_ref }}
+            - name: Build and push Docker image (Tag and Latest)
+              if: ${{ inputs.tag_name }}
               uses: docker/build-push-action@v5
               with:
                   context: .
@@ -61,7 +71,6 @@ jobs:
                   tags: |
                       ghcr.io/${{ github.repository }}:${{ inputs.tag_name }}
                       ghcr.io/${{ github.repository }}:latest
-
             - name: Initiate E2E test workflow
               run: |
                   gh workflow run --repo hedia-team/e2e-service --raw-field suite="All" test-please.yml
