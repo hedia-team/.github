@@ -6,11 +6,6 @@ on:
                 description: The git ref to check out
                 type: string
                 required: true
-            latest:
-                description: Whether to build the latest tag
-                type: boolean
-                required: false
-                default: false
         secrets:
             READONLY_NPM_TOKEN:
                 description: Needed to install private @hedia npm packages
@@ -26,7 +21,7 @@ permissions:
 
 jobs:
     build-and-push:
-        runs-on: ${{ vars.DOCKERIZE_PLEASE_RUNNER }}
+        runs-on: ${{ vars.CI_DOCKER_RUNNER }}
         timeout-minutes: 10
         steps:
             - name: Check out code
@@ -58,4 +53,3 @@ jobs:
                   push: true
                   tags: |
                       ghcr.io/${{ github.repository }}:${{ inputs.ref }}
-                      ${{ inputs.latest && 'latest' || '' }}
