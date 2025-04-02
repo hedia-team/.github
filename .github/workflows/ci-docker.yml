@@ -59,4 +59,4 @@ jobs:
                   push: true
                   tags: |
                       ghcr.io/${{ github.repository }}:${{ inputs.ref }}
-                      ${{ input.latest && 'latest' || '' }}
+                      ${{ inputs.latest && 'latest' || '' }}
