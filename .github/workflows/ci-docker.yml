@@ -32,9 +32,6 @@ jobs:
             - name: Create .npmrc
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.READONLY_NPM_TOKEN }}" > .npmrc
 
-            - name: Set up QEMU
-              uses: docker/setup-qemu-action@v3
-
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
