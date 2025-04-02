@@ -1,5 +1,4 @@
-name: Dockerize Please 2
-
+name: Docker Please
 on:
     workflow_call:
         inputs:
