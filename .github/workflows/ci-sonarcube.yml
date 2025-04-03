@@ -27,7 +27,7 @@ jobs:
               run: echo "GITHUB_PROJECT=${GITHUB_PROJECT/\//_}" >> $GITHUB_ENV
 
             - name: SonarCloud Scan
-              uses: SonarSource/sonarqube-scan-action@5.1.0
+              uses: SonarSource/sonarqube-scan-action@v5.1.0
               env:
                   GITHUB_TOKEN: ${{ github.token }}
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
