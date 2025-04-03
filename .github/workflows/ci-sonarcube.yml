@@ -11,7 +11,7 @@ on:
                 required: true
 
 jobs:
-    scan:
+    sonarcloud:
         runs-on: ${{ vars.CI_SONARCUBE_RUNNER }}
         timeout-minutes: 5
 
