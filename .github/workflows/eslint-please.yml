@@ -8,7 +8,7 @@ on:
                 required: true
 
 jobs:
-    eslint:
+    run:
         runs-on: ${{ vars.CI_ESLINT_RUNNER }}
         timeout-minutes: 1
         steps:

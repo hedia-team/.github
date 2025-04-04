@@ -1,4 +1,4 @@
-name: Package Lint Please
+name: npm-package-json-lint Please
 
 on:
     workflow_call:
@@ -8,7 +8,7 @@ on:
                 required: true
 
 jobs:
-    package-lint:
+    run:
         runs-on: ${{ vars.CI_PACKAGE_LINT_RUNNER }}
         timeout-minutes: 1
 

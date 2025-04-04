@@ -1,4 +1,4 @@
-name: Sonar Please
+name: SonarCube Please
 
 on:
     workflow_call:
@@ -11,7 +11,7 @@ on:
                 required: true
 
 jobs:
-    sonarcloud:
+    scan:
         runs-on: ${{ vars.CI_SONARCUBE_RUNNER }}
         timeout-minutes: 5
 

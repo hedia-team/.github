@@ -1,4 +1,4 @@
-name: Test Please
+name: Node Please
 
 on:
     workflow_call:
