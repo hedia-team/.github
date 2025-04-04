@@ -79,4 +79,4 @@ jobs:
     sonar:
         if: ${{ inputs.sonar == 'true' }}
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-sonarcube.yml@feat-docker-please-with-ref
+        uses: hedia-team/.github/.github/workflows/ci-sonar.yml@feat-docker-please-with-ref
