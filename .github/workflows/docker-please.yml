@@ -25,6 +25,9 @@ jobs:
             - name: Ref name
               run: echo REF ${{ github.ref_name }}
 
+            - name: Head ref
+              run: echo REF ${{ github.head_ref }}
+
             - name: Check out code
               uses: actions/checkout@v4
 
