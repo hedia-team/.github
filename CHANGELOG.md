@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.13.0](https://github.com/hedia-team/.github/compare/v7.12.0...v7.13.0) (2025-04-04)
+
+
+### New Features
+
+* Add Docker Please ([#142](https://github.com/hedia-team/.github/issues/142)) ([88f1bc7](https://github.com/hedia-team/.github/commit/88f1bc7706f2507a2579071f16d4c68dcd073390))
+* Add Workflows Please ([#143](https://github.com/hedia-team/.github/issues/143)) ([0072681](https://github.com/hedia-team/.github/commit/0072681b24429998eb2cf31f6f66d040d9dc89dc))
+
 ## [7.12.0](https://github.com/hedia-team/.github/compare/v7.11.0...v7.12.0) (2025-04-03)
 
 
