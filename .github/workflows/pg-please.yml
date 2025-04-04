@@ -1,0 +1,84 @@
+name: PG Please
+
+on:
+    workflow_call:
+        inputs:
+            postgres:
+                description: Database used in this workflow. Default to none
+                required: true
+                type: string
+
+        secrets:
+            OP_SERVICE_ACCOUNT_TOKEN:
+                description: Required to load environment variables stored in 1Password
+                required: true
+            READONLY_NPM_TOKEN:
+                description: Required to install private @hedia npm packages
+                required: true
+
+jobs:
+    tools:
+        runs-on: ${{ vars.PG_PLEASE_RUNNER }}
+        timeout-minutes: 5
+
+        services:
+            postgres:
+                image: postgres:14
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: password
+                    POSTGRES_DB: ${{ inputs.postgres }}
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install 1Password CLI
+              uses: 1password/install-cli-action@v1
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: "npm"
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install D2
+              run: curl -fsSL https://d2lang.com/install.sh | sh -s --
+
+            - name: Install Dependencies
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: Download Build
+              uses: actions/download-artifact@v4
+              with:
+                  path: .
+                  pattern: dist
+
+            - name: Load Environment Variables
+              run: (op read op://Github/${{ github.event.repository.name }}/ENV_FILE || true) > .env
+              env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+            - name: Setup Service
+              run: npm run setup
+
+            - name: Check database schema
+              run: npm run pg-inspect:check --strict
+
+            - name: Regenerate schema description and docs
+              run: npm run pg
+
+            - name: Check that regenerated files didn't change
+              run: "[[ -n $(git status --porcelain docs/pg/*.d2 docs/pg/*.html src/infrastructure/pg/schemas/) ]] && exit 1 || :"
