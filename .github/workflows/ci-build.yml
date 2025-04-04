@@ -1,4 +1,4 @@
-name: Typescript
+name: Build
 
 on:
     workflow_call:
@@ -8,7 +8,7 @@ on:
                 required: true
 
 jobs:
-    typescript:
+    compile:
         runs-on: ${{ vars.CI_TYPESCRIPT_RUNNER }}
         timeout-minutes: 1
 
@@ -30,11 +30,5 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - name: Build Repository
-              run: npm run build
-
-            - name: Upload Build
-              uses: actions/upload-artifact@v4
-              with:
-                  name: dist
-                  path: dist
+            - name: Run TSC
+              run: npm run tsc
