@@ -65,17 +65,17 @@ permissions:
 
 jobs:
     build:
-        if: ${{ inputs.build == 'true' }}
+        if: ${{ inputs.build == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/build-please.yml@feat-docker-please-with-ref
 
     docker:
-        if: ${{ inputs.docker == 'true' }}
+        if: ${{ inputs.docker == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/docker-please.yml@feat-docker-please-with-ref
 
     e2e:
-        if: ${{ inputs.e2e == 'true' }}
+        if: ${{ inputs.e2e == true }}
         uses: hedia-team/e2e-service/.github/workflows/test-please.yml@feat-reusable-test-please
         secrets: inherit
         with:
@@ -84,26 +84,26 @@ jobs:
             suite: "All"
 
     eslint:
-        if: ${{ inputs.eslint == 'true' }}
+        if: ${{ inputs.eslint == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/eslint-please.yml@feat-docker-please-with-ref
 
     package-lint:
-        if: ${{ inputs.package-lint == 'true' }}
+        if: ${{ inputs.package-lint == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/package-lint-please.yml@feat-docker-please-with-ref
 
     prettier:
-        if: ${{ inputs.prettier == 'true' }}
+        if: ${{ inputs.prettier == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/prettier-please.yml@feat-docker-please-with-ref
 
     sonar:
-        if: ${{ inputs.sonar == 'true' }}
+        if: ${{ inputs.sonar == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/sonar-please.yml@feat-docker-please-with-ref
 
     test:
-        if: ${{ inputs.test == 'true' }}
+        if: ${{ inputs.test == true }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/test-please.yml@feat-docker-please-with-ref
