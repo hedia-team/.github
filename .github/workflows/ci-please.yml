@@ -106,4 +106,4 @@ jobs:
     test:
         if: ${{ inputs.test == 'true' }}
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-test.yml@feat-docker-please-with-ref
+        uses: hedia-team/.github/.github/workflows/test-please.yml@feat-docker-please-with-ref
