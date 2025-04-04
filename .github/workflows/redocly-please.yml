@@ -1,0 +1,61 @@
+name: Redocly Please
+
+on:
+    workflow_call:
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to install private @hedia npm packages
+                required: true
+
+jobs:
+    bundle:
+        runs-on: ${{ vars.REDOCLY_PLEASE_RUNNER }}
+        timeout-minutes: 1
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: "npm"
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install Dependencies
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: Run Redocly Bundle
+              run: npm run redocly:bundle
+
+            - name: Check that bundle is up to date
+              run: "[[ -n $(git status --porcelain) ]] && exit 1 || :"
+    lint:
+        runs-on: ${{ vars.REDOCLY_PLEASE_RUNNER }}
+        timeout-minutes: 1
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: "npm"
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install Dependencies
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: Run Redocly Lint
+              run: npm run redocly:lint --if-present

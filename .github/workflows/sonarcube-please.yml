@@ -1,0 +1,37 @@
+name: SonarCube Please
+
+on:
+    workflow_call:
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to install private @hedia npm packages
+                required: true
+            SONAR_TOKEN:
+                description: Needed to run SonarCube Scan
+                required: true
+
+jobs:
+    scan:
+        runs-on: ${{ vars.SONARCUBE_PLEASE_RUNNER }}
+        timeout-minutes: 5
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of SonarCloud analysis
+
+            - name: Select Project
+              env:
+                  GITHUB_PROJECT: ${{ github.repository }}
+              run: echo "GITHUB_PROJECT=${GITHUB_PROJECT/\//_}" >> $GITHUB_ENV
+
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarqube-scan-action@v5.1.0
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              with:
+                  args: >
+                      -Dsonar.projectKey=${{ env.GITHUB_PROJECT }}
+                      -Dsonar.organization=${{ github.repository_owner }}

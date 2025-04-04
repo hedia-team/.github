@@ -1,0 +1,108 @@
+name: Node Please
+
+on:
+    workflow_call:
+        inputs:
+            postgres:
+                description: Database used in this workflow. Default to none
+                required: false
+                type: string
+            rabbitmq:
+                description: Whether or not to use RabbitMQ in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
+            redis:
+                description: Whether or not to use Redis in this workflow. Default to false
+                required: false
+                default: false
+                type: boolean
+
+        secrets:
+            OP_SERVICE_ACCOUNT_TOKEN:
+                description: Required to load environment variables stored in 1Password
+                required: true
+            READONLY_NPM_TOKEN:
+                description: Required to install private @hedia npm packages
+                required: true
+
+jobs:
+    test:
+        runs-on: ${{ vars.NODE_PLEASE_RUNNER }}
+        timeout-minutes: 5
+
+        services:
+            postgres:
+                image: ${{ inputs.postgres && 'postgres' || '' }}
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: password
+                    POSTGRES_DB: ${{ inputs.postgres }}
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+            rabbitmq:
+                image: ${{ inputs.rabbitmq && 'rabbitmq' || '' }}
+                options: >-
+                    --health-cmd "rabbitmq-diagnostics -q ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5672:5672
+            redis:
+                image: ${{ inputs.redis && 'redis' || '' }}
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 6379:6379
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Install 1Password CLI
+              uses: 1password/install-cli-action@v1
+
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v4
+              with:
+                  always-auth: true
+                  cache: "npm"
+                  node-version-file: package.json
+                  registry-url: https://registry.npmjs.org
+                  scope: "@hedia"
+
+            - name: Install Dependencies
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
+
+            - name: Load Environment Variables
+              run: (op read op://Github/${{ github.event.repository.name }}/ENV_FILE || true) > .env
+              env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+            - name: Setup Service
+              run: npm run setup --if-present
+
+            - name: Run Tests
+              run: npm run test
+              env:
+                  BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+                  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+                  PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+                  SLACK_APP_TOKEN: ${{ secrets.SLACK_APP_TOKEN }}
+
+            - name: Upload reports
+              uses: actions/upload-artifact@v4
+              with:
+                  name: reports
+                  path: reports
