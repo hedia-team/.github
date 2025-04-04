@@ -19,6 +19,9 @@ jobs:
         runs-on: ${{ vars.CI_DOCKER_RUNNER }}
         timeout-minutes: 10
         steps:
+            - name: Ref
+              run: echo REF ${{ github.ref }}
+
             - name: Check out code
               uses: actions/checkout@v4
 
@@ -42,4 +45,4 @@ jobs:
                   platforms: linux/amd64
                   push: true
                   tags: |
-                      ghcr.io/${{ github.repository }}:${{ inputs.ref }}
+                      ghcr.io/${{ github.repository }}:${{ github.ref }}
