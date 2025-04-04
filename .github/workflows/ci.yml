@@ -1,0 +1,82 @@
+name: CI
+on:
+    workflow_call:
+        inputs:
+            ref:
+                description: The git ref to check out
+                type: string
+                required: true
+            eslint:
+                description: Run ESLint
+                type: boolean
+                required: false
+                default: false
+            prettier:
+                description: Run Prettier
+                type: boolean
+                required: false
+                default: false
+            build:
+                description: Build
+                type: boolean
+                required: false
+                default: false
+            test:
+                description: Test
+                type: boolean
+                required: false
+                default: false
+            sonar:
+                description: Run SonarQube
+                type: boolean
+                required: false
+                default: false
+            package:
+                description: Run Package Lint
+                type: boolean
+                required: false
+                default: false
+
+        secrets:
+            READONLY_NPM_TOKEN:
+                description: Needed to install private @hedia npm packages
+                required: true
+            HEDIA_BOT_GITHUB_PAT:
+                description: Needed to push to GitHub Container Registry
+                required: true
+
+permissions:
+    contents: write
+    pull-requests: write
+    packages: write
+
+jobs:
+    eslint:
+        if: ${{ inputs.eslint == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-eslint.yml@feat-docker-please-with-ref
+
+    prettier:
+        if: ${{ inputs.prettier == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-prettier.yml@feat-docker-please-with-ref
+
+    package:
+        if: ${{ inputs.package == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-package-lint.yml@feat-docker-please-with-ref
+
+    build:
+        if: ${{ inputs.build == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-build.yml@feat-docker-please-with-ref
+
+    test:
+        if: ${{ inputs.test == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-test.yml@feat-docker-please-with-ref
+
+    sonar:
+        if: ${{ inputs.sonar == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/ci-sonarcube.yml@feat-docker-please-with-ref
