@@ -9,7 +9,7 @@ on:
 
 jobs:
     run:
-        runs-on: ${{ vars.NPM_PACKAGE_JSON_LINT_RUNNER }}
+        runs-on: ${{ vars.NPM_PACKAGE_JSON_LINT_PLEASE_RUNNER }}
         timeout-minutes: 1
 
         steps:
