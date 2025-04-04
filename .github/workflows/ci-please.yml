@@ -76,7 +76,7 @@ jobs:
 
     e2e:
         if: ${{ inputs.e2e == 'true' }}
-        uses: hedia-team/e2e-service/.github/workflows/test-please.yml@feat-reusable-test-please'
+        uses: hedia-team/e2e-service/.github/workflows/test-please.yml@feat-reusable-test-please
         secrets: inherit
         with:
             package-name: ${{ github.event.repository.name }}
