@@ -1,4 +1,4 @@
-name: Redocly
+name: Redocly Please
 
 on:
     workflow_call:

@@ -1,4 +1,4 @@
-name: SonarCube Please
+name: Sonar Please
 
 on:
     workflow_call:

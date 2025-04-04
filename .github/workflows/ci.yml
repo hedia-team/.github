@@ -2,37 +2,50 @@ name: CI
 on:
     workflow_call:
         inputs:
-            ref:
-                description: The git ref to check out
-                type: string
-                required: true
-            eslint:
-                description: Run ESLint
-                type: boolean
-                required: false
-                default: false
-            prettier:
-                description: Run Prettier
-                type: boolean
-                required: false
-                default: false
             build:
                 description: Build
                 type: boolean
                 required: false
                 default: false
+
+            docker:
+                description: Docker
+                type: boolean
+                required: false
+                default: false
+
+            e2e:
+                description: E2E
+                type: boolean
+                required: false
+                default: false
+
+            eslint:
+                description: ESLint
+                type: boolean
+                required: false
+                default: false
+
+            package-lint:
+                description: Package Lint
+                type: boolean
+                required: false
+                default: false
+
+            prettier:
+                description: Prettier
+                type: boolean
+                required: false
+                default: false
+
+            sonar:
+                description: Sonar
+                type: boolean
+                required: false
+                default: false
+
             test:
                 description: Test
-                type: boolean
-                required: false
-                default: false
-            sonar:
-                description: Run SonarQube
-                type: boolean
-                required: false
-                default: false
-            package:
-                description: Run Package Lint
                 type: boolean
                 required: false
                 default: false
@@ -51,32 +64,47 @@ permissions:
     packages: write
 
 jobs:
+    build:
+        if: ${{ inputs.build == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/typescript-please.yml@feat-docker-please-with-ref
+
+    docker:
+        if: ${{ inputs.docker == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/docker-please.yml@feat-docker-please-with-ref
+
+    e2e:
+        if: ${{ inputs.e2e == 'true' }}
+        uses: hedia-team/e2e-service/.github/workflows/test-please.yml@feat-reusable-test-please
+        needs: docker
+        secrets: inherit
+        with:
+            package-name: ${{ github.event.repository.name }}
+            package-tag: ${{ github.ref }}
+            suite: "All"
+
     eslint:
         if: ${{ inputs.eslint == 'true' }}
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-eslint.yml@feat-docker-please-with-ref
+        uses: hedia-team/.github/.github/workflows/eslint-please.yml@feat-docker-please-with-ref
+
+    package-lint:
+        if: ${{ inputs.package-lint == 'true' }}
+        secrets: inherit
+        uses: hedia-team/.github/.github/workflows/package-lint-please.yml@feat-docker-please-with-ref
 
     prettier:
         if: ${{ inputs.prettier == 'true' }}
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-prettier.yml@feat-docker-please-with-ref
+        uses: hedia-team/.github/.github/workflows/prettier-please.yml@feat-docker-please-with-ref
 
-    package:
-        if: ${{ inputs.package == 'true' }}
+    sonar:
+        if: ${{ inputs.sonar == 'true' }}
         secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-package-lint.yml@feat-docker-please-with-ref
-
-    build:
-        if: ${{ inputs.build == 'true' }}
-        secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-build.yml@feat-docker-please-with-ref
+        uses: hedia-team/.github/.github/workflows/sonar-please.yml@feat-docker-please-with-ref
 
     test:
         if: ${{ inputs.test == 'true' }}
         secrets: inherit
         uses: hedia-team/.github/.github/workflows/ci-test.yml@feat-docker-please-with-ref
-
-    sonar:
-        if: ${{ inputs.sonar == 'true' }}
-        secrets: inherit
-        uses: hedia-team/.github/.github/workflows/ci-sonar.yml@feat-docker-please-with-ref

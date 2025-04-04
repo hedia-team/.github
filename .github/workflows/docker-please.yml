@@ -1,11 +1,6 @@
 name: CI Docker
 on:
     workflow_call:
-        inputs:
-            ref:
-                description: The git ref to check out
-                type: string
-                required: true
         secrets:
             READONLY_NPM_TOKEN:
                 description: Needed to install private @hedia npm packages
@@ -26,8 +21,6 @@ jobs:
         steps:
             - name: Check out code
               uses: actions/checkout@v4
-              with:
-                  ref: ${{ inputs.ref }}
 
             - name: Create .npmrc
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.READONLY_NPM_TOKEN }}" > .npmrc

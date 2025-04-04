@@ -1,4 +1,4 @@
-name: Package Lint
+name: ESLint Please
 
 on:
     workflow_call:
@@ -8,10 +8,9 @@ on:
                 required: true
 
 jobs:
-    package-lint:
-        runs-on: ${{ vars.CI_PACKAGE_LINT_RUNNER }}
+    eslint:
+        runs-on: ${{ vars.CI_ESLINT_RUNNER }}
         timeout-minutes: 1
-
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
@@ -30,5 +29,5 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.READONLY_NPM_TOKEN }}
 
-            - name: Run Package Lint
-              run: npm run package:lint
+            - name: Run ESLint
+              run: npm run eslint
